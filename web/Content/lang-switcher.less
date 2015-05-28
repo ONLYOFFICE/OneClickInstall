@@ -1,0 +1,94 @@
+﻿/*
+ *
+ * (c) Copyright Ascensio System Limited 2010-2015
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * You can contact Ascensio System SIA by email at sales@onlyoffice.com
+ *
+*/
+
+@import "vars";
+
+.lang-switcher
+{
+    display: inline-block;
+    float: right;
+    margin-top: 27px;
+    position: relative;
+
+    .switcher
+    {
+        padding-right: 15px;
+        background: url("images/combo_gray.png") right center no-repeat;
+        cursor: pointer;
+
+        .lang-title
+        {
+            height: 16px;
+            line-height: 16px;
+
+            span
+            {
+                border-bottom: 1px dotted #ffffff;
+                color: #ffffff;
+            }
+        }
+    }
+
+    a, .lang-title
+    {
+        background: url("images/flags.png") no-repeat;
+        padding-left: 25px;
+
+        &.en
+        {
+            background-position: left -14px;
+        }
+
+        &.de
+        {
+            background-position: left 2px;
+        }
+
+        &.fr
+        {
+            background-position: left -46px;
+        }
+
+        &.es
+        {
+            background-position: left -30px;
+        }
+
+        &.ru
+        {
+            background-position: left -94px;
+        }
+
+        &.lv
+        {
+            background-position: left -78px;
+        }
+
+        &.it
+        {
+            background-position: left -62px;
+        }
+    }
+
+    .action-menu
+    {
+        right: -16px;
+        top: 26px;
+    }
+}

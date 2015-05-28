@@ -1,0 +1,51 @@
+ONLYOFFICE One Click Installation uses code from the following 3rd party projects.
+
+
+1. MySql.Data - ADO.Net driver for MySQL. (http://dev.mysql.com/downloads/)
+
+License:        GPL 2.0
+
+
+2. log4net - log4net is a tool to help the programmer output log statements to a variety of output targets. (http://logging.apache.org/log4net/)
+
+License:        Apache 2.0
+
+
+3. dotless.Core - This is a project to port the hugely useful Less libary to the .NET world. It give variables, nested rules and operators to CSS. (http://lesscss.org/)
+
+License:        Apache 2.0
+
+
+4. Newtonsoft.Json - Json.NET is a popular high-performance JSON framework for .NET (http://www.newtonsoft.com/json)
+
+License:        MIT
+
+
+5. Renci.SshNet- This project was inspired by Sharp.SSH library which was ported from Java. This library is a complete rewrite using .NET, without any third party dependencies and to utilize the parallelism as much as possible to allow best performance you can get. (http://sshnet.codeplex.com/)
+
+License:        BSD-UNSPECIFIED
+
+
+6. WebGrease- Web Grease is a suite of tools for optimizing javascript, css files and images. (http://webgrease.codeplex.com/)
+
+License:        MS-EULA
+
+
+7. Microsoft.Web.Infrastructure - This package contains the Microsoft.Web.Infrastructure assembly that lets you dynamically register HTTP modules at run time. (http://www.asp.net/)
+
+License:        MS-EULA
+
+
+8. jQuery - Query is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. (http://jquery.com/)
+
+License:        MIT
+
+
+9. jQuery BlockUI Plugin - The jQuery BlockUI Plugin lets you simulate synchronous behavior when using AJAX, without locking the browser. (http://malsup.com/jquery/block/)
+
+License:        MIT, GPL
+
+
+10. toastr - Simple javascript toast notifications. (https://github.com/CodeSeven/toastr)
+
+License:        MIT

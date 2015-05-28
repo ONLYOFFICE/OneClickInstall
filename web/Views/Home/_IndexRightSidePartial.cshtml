@@ -1,0 +1,202 @@
+﻿@using OneClickInstallation.Models
+
+<div id="connectionFormDesc" class="form-desc display-none">
+
+    <div class="disconnected display-none">
+        
+        <h1 class="blue">@OneClickHomePageResource.ConnectionSettingsFormDescHdr</h1> 
+
+        <p class="bottom-indent-big">@OneClickHomePageResource.ConnectionSettingsFormDescText</p>
+
+        <div class="install-step-img bottom-indent"></div>
+
+        <div class="bottom-indent-big">
+            <div class="install-step semibold">@OneClickHomePageResource.ConnectStepText</div>
+            <div class="install-step semibold">@OneClickHomePageResource.InstallStepText</div>
+            <div class="install-step semibold">@OneClickHomePageResource.CustomStepText</div>
+            <p class="label">@OneClickHomePageResource.CustomStepTitleText</p>
+        </div>
+
+        <div class="bottom-indent-big">
+            <p>@OneClickHomePageResource.SourceDesc</p>
+            <div class="git">
+                <a class="underline gray" href="@Settings.SourceUrl" target="_blank">@OneClickHomePageResource.SourceLinkText</a>
+            </div>
+        </div>
+
+        <h3 class="base">@OneClickHomePageResource.ServerRequirements</h3>
+
+        <div class="bottom-indent semibold">@OneClickHomePageResource.HardwareRequirements</div>
+
+        <div class="bottom-indent requirements-box">
+            <div class="hardware-item">
+                @Html.Raw(string.Format(OneClickHomePageResource.HardwareRequirementsMemory, "<span class=\"big base\">", "</span>"))
+            </div>
+            <div class="hardware-item">
+                @Html.Raw(string.Format(OneClickHomePageResource.HardwareRequirementsProcessor, "<span class=\"big base\">", "</span>"))
+            </div>
+            <div class="hardware-item">
+                @Html.Raw(string.Format(OneClickHomePageResource.HardwareRequirementsDisc, "<span class=\"big base\">", "</span>"))
+            </div>
+        </div>
+
+        <div class="bottom-indent semibold">@OneClickHomePageResource.SoftwareRequirements</div>
+
+        <div class="bottom-indent requirements-box">
+            <ul class="square-style-list">
+                <li>
+                    <span>@OneClickHomePageResource.OperatingSystemUbuntu</span>
+                </li>
+                <li>
+                    <span>@OneClickHomePageResource.OperatingSystemFedora</span>
+                </li>
+                <li>
+                    <span>@OneClickHomePageResource.OperatingSystemCoreOS</span>
+                </li>
+                <li>
+                    <span>@OneClickHomePageResource.OperatingSystemOther</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="connected display-none">
+        
+        <h1 class="blue">@OneClickHomePageResource.ConnectionSettingsConnectedFormDescHdr</h1> 
+        
+        <p>@OneClickHomePageResource.ConnectionSettingsConnectedFormDescText</p>
+
+    </div>
+
+</div>
+
+<div id="setupFormDesc" class="form-desc display-none">
+    
+    <div class="description display-none">
+
+        <h1 class="blue">@OneClickHomePageResource.SetupFormDescHdr</h1>
+        <p>@OneClickHomePageResource.CommunityServerText</p>
+
+        <h2 class="blue">@OneClickHomePageResource.CommunityServerHdr</h2>
+        <p>@OneClickHomePageResource.CommunityServerText</p>
+
+        <h2 class="blue">@OneClickHomePageResource.DocumentServerHdr</h2>
+        <p>@OneClickHomePageResource.DocumentServerText</p>
+
+        <h2 class="blue">@OneClickHomePageResource.MailServerHdr</h2>
+        <p>@OneClickHomePageResource.MailServerText</p>
+
+        <div class="bottom-indent semibold">@OneClickHomePageResource.MailServerRequirementsHdr</div>
+        <div class="bottom-indent requirements-box">
+            <ul class="square-style-list" style="width: auto;">
+                <li>
+                    <span>@OneClickHomePageResource.MailServerRequirementsItem_1</span>
+                </li>
+                <li>
+                    <span>@OneClickHomePageResource.MailServerRequirementsItem_2</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="progress display-none">
+
+        <h1 class="blue">@OneClickHomePageResource.SetupFormDescProgressHdr</h1>
+
+        <p>@OneClickHomePageResource.SetupFormDescProgressText</p>
+
+        <div class="progress-block bottom-indent">
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.UploadFiles)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_UploadFiles</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.GetOsInfo)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_GetOsInfo</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.CheckPorts)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_CheckPorts</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.InstallDocker)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallDocker</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.InstallDocumentServer)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallDocumentServer</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.InstallMailServer)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallMailServer</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.InstallCommunityServer)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallCommunityServer</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+            <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.WarmUp)">
+                <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_WarmUp</div>
+                <div class="progress-desc label"></div>
+                <div class="progress-icon"></div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="settingsFormDesc" class="form-desc display-none">
+    <h1 class="blue">@OneClickHomePageResource.ServerSettingsFormDescHdr</h1>
+
+    <div class="bottom-indent-big">
+        <a id="enterBtn" class="button green" href="#" target="_blank">
+            @OneClickCommonResource.Enter
+        </a>
+    </div>
+
+    <h2 class="blue clear-fix">
+        <span class="float-left">@OneClickHomePageResource.ContrrolPanelHdr</span>
+        <span class="float-left coming-soon"></span> 
+    </h2>
+
+    <p>@OneClickHomePageResource.ContrrolPanelText</p>
+
+    <table class="bottom-indent" style="width: 100%">
+        <tr>
+            <td>
+                <div class="cp-feature semibold">
+                    <div class="icon https"></div>
+                    @OneClickHomePageResource.ContrrolPanelFeatureHttps
+                </div>
+            </td>
+            <td>
+                <div class="cp-feature semibold">
+                    <div class="icon audit"></div>                    
+                    @OneClickHomePageResource.ContrrolPanelFeatureAudit
+                </div>
+            </td>
+            <td>
+                <div class="cp-feature semibold">
+                    <div class="icon backup"></div>
+                    @OneClickHomePageResource.ContrrolPanelFeatureBackup
+                </div>
+            </td>
+            <td>
+                <div class="cp-feature semibold">
+                    <div class="icon update"></div>
+                    @OneClickHomePageResource.ContrrolPanelFeatureUpdate
+                </div>
+            </td>
+        </tr>
+    </table>
+
+</div>

@@ -1,0 +1,41 @@
+﻿
+@{
+    var currentAction = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var currentLang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
+}
+
+<div class="layout-content-wrapper clear-fix">
+    <a class="logo" href="@Url.Action("Index")"></a>
+
+    <div class="lang-switcher">
+        <div class="switcher">
+            <div class="lang-title @currentLang">
+                <span>@LangHelper.GetLangTitle(currentLang)</span>
+            </div>
+        </div>
+        <div class="action-menu">
+            <div class="corner"></div>
+            <ul>
+                @foreach (var lang in LangHelper.GetLanguages())
+                {
+                    <li class="action">
+                        <a href="@Url.Action(currentAction, new {lang})" class="@lang">
+                            @LangHelper.GetLangTitle(lang)
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="top-header-nav">
+        <a href="@Url.Action("Index")" class="white uppercase selected">
+            @OneClickHomePageResource.Home
+        </a>
+        <a href="@string.Format("http://www.onlyoffice.com/{0}/about.aspx", currentLang)" target="_blank" class="white uppercase">
+            @OneClickCommonResource.About
+        </a>
+    </div>
+</div>
+
+

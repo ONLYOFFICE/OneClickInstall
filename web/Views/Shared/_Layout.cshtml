@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="keywords" content="@OneClickCommonResource.MetaKeywords">
+    <meta name="description" content="@OneClickCommonResource.MetaDescription">
+    
+    <title>@ViewBag.Title</title>
+    
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:900,800,700,600,500,400,300&amp;subset=latin,cyrillic-ext,cyrillic,latin-ext">
+    
+    @Styles.Render("~/Content/less")
+
+    @if (!string.IsNullOrEmpty(Settings.AnalyticsFileUrl))
+    {
+        <script src="@Settings.AnalyticsFileUrl"></script>
+    }
+
+</head>
+    <body>
+        
+        <div class="layout-wrapper">
+            
+            <div class="layout-header">
+                @Html.Partial("_HeaderPartial")
+            </div>
+            
+            <div class="layout-body layout-content-wrapper clear-fix">
+
+                @if (IsSectionDefined("leftSide"))
+                {
+                    <div class="layout-left-side">
+                        @RenderSection("leftSide", false)
+                    </div>
+                }
+
+                @if (IsSectionDefined("rightSide"))
+                {
+                    <div class="layout-right-side">
+                        @RenderSection("rightSide", false)
+                    </div>
+                }
+                
+                @RenderBody()
+
+            </div>
+
+            <div class="layout-footer">
+                @Html.Partial("_FooterPartial")
+            </div>
+
+        </div>
+
+        <script src="@Url.Action("Index", "Resource")"></script>
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("scripts", false)
+
+    </body>
+</html>

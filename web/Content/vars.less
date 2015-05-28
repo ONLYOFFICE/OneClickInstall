@@ -1,0 +1,96 @@
+﻿/*
+ *
+ * (c) Copyright Ascensio System Limited 2010-2015
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * You can contact Ascensio System SIA by email at sales@onlyoffice.com
+ *
+*/
+
+.borderRadius(@size: 5px)
+{
+    border-radius: @size;
+}
+
+.borderTopRadius(@radius: 5px) {
+    border-top-right-radius: @radius;
+    border-top-left-radius: @radius;
+}
+
+.borderBottomRadius(@radius: 5px) {
+    border-bottom-right-radius: @radius;
+    border-bottom-left-radius: @radius;
+}
+
+.boxShadow(@hShadow: 1px, @vShadow: 1px, @spread: 8px, @color: #aaaaaa)
+{
+    -webkit-box-shadow: @hShadow @vShadow @spread @color;
+    -moz-box-shadow: @hShadow @vShadow @spread @color;
+    box-shadow: @hShadow @vShadow @spread @color;
+}
+
+.backgroundLinearGradient(@topColor, @bottomColor)
+{
+    background: -webkit-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    background: -webkit-linear-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    background: -moz-linear-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    background: -ms-linear-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    background: -o-linear-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    background: linear-gradient(top, @topColor, @bottomColor) repeat scroll 0 0 @bottomColor;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@topColor, endColorstr=@bottomColor);
+}
+
+.textOverflow(@width)
+{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: @width;
+}
+
+.userSelect(@userSelect)
+{
+    -webkit-touch-callout: @userSelect;
+    -webkit-user-select: @userSelect;
+    -khtml-user-select: @userSelect;
+    -moz-user-select: @userSelect;
+    -ms-user-select: @userSelect;
+    user-select: @userSelect;
+}
+
+.placeholder(@color, @fontSize)
+{
+    &::-webkit-input-placeholder
+    {
+        color: @color;
+        font-size: @fontSize;
+    }
+
+    &::-moz-placeholder
+    {
+        color: @color;
+        font-size: @fontSize;
+    }
+
+    &:-moz-placeholder
+    {
+        color: @color;
+        font-size: @fontSize;
+    }
+
+    &:-ms-input-placeholder
+    {
+        color: @color;
+        font-size: @fontSize;
+    }
+}

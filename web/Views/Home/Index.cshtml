@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = OneClickHomePageResource.InstallationPageTitle;
+}
+
+@section leftSide
+{
+    @Html.Partial("_IndexLeftSidePartial")
+}
+
+@section rightSide
+{
+    @Html.Partial("_IndexRightSidePartial")
+}
+
+<div id="connectionErrorPop" class="popup">
+    <div class="popup-caption">
+        <div class="popup-error"></div>
+        @OneClickHomePageResource.ConnectionErrorHdr
+        <div class="popup-close">x</div>
+    </div>
+    <div class="popup-body">
+        <div class="bottom-indent">
+            <div class="error-message"></div>
+            <div class="default-message">
+                @OneClickHomePageResource.ConnectionErrorText_1
+                <br/>
+                @OneClickHomePageResource.ConnectionErrorText_2
+            </div>
+        </div>
+        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+    </div>
+</div>
+
+<div id="installErrorPop" class="popup">
+    <div class="popup-caption">
+        <div class="popup-error"></div>
+        @OneClickHomePageResource.InstallationErrorHdr
+        <div class="popup-close">x</div>
+    </div>
+    <div class="popup-body">
+        <div class="bottom-indent">
+            <div class="error-message"></div>
+            <div class="default-message">@OneClickHomePageResource.InstallationErrorText</div>
+            <br>
+            <span>@OneClickHomePageResource.ContactSupport&nbsp;</span>
+            <a href="mailto:@Settings.SupportEmail" class="underline">@Settings.SupportEmail</a>
+        </div>
+        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+    </div>
+</div>
+
+<div id="existVersionErrorPop" class="popup">
+    <div class="popup-caption">
+        <div class="popup-error"></div>
+        @OneClickHomePageResource.ExistVersionErrorHdr
+        <div class="popup-close">x</div>
+    </div>
+    <div class="popup-body">
+        <div class="bottom-indent">
+            <div class="error-message"></div>
+            <div class="default-message">
+                <div>
+                    @OneClickHomePageResource.ExistVersionErrorText
+                </div>
+                <br>
+                <span>@OneClickHomePageResource.ContactSupport&nbsp;</span>
+                <a href="mailto:@Settings.SupportEmail" class="underline">@Settings.SupportEmail</a>
+            </div>
+        </div>
+        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+    </div>
+</div>
+
+@section scripts {
+    
+    @Scripts.Render("~/bundles/homepage")
+    
+    <script>
+        $(function() {
+
+            SetupInfo.connectionSettings = JSON.parse(@Html.Raw(Json.Encode(ViewBag.ConnectionSettings)));
+            SetupInfo.installedComponents = JSON.parse(@Html.Raw(Json.Encode(ViewBag.InstalledComponents)));
+            SetupInfo.selectedComponents = JSON.parse(@Html.Raw(Json.Encode(ViewBag.SelectedComponents)));
+            SetupInfo.installationProgress = JSON.parse(@Html.Raw(Json.Encode(ViewBag.InstallationProgress)));
+
+            InstallManager.init('@Url.Action("UploadFile", "Home")',
+                '@Url.Action("Connect", "Home")',
+                '@Url.Action("StartInstall", "Home")',
+                '@Url.Action("InstallProgress", "Home")',
+                '@Url.Action("SendEmail", "Home")');
+        });
+    </script>
+}

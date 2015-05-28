@@ -1,0 +1,372 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ConnectionErrorHdr" xml:space="preserve">
+    <value>Connection error</value>
+  </data>
+  <data name="ConnectionErrorText_1" xml:space="preserve">
+    <value>Could not connect to the server.</value>
+  </data>
+  <data name="ConnectionErrorText_2" xml:space="preserve">
+    <value>Check connection setting and try again.</value>
+  </data>
+  <data name="ConnectionSettingsFormText" xml:space="preserve">
+    <value>Before you start the installation process, you need to connect to your server. Fill out the form below and click the 'CONNECT' button.</value>
+  </data>
+  <data name="ConnectionSettingsFormHdr" xml:space="preserve">
+    <value>Connection Settings</value>
+  </data>
+  <data name="HardwareRequirements" xml:space="preserve">
+    <value>Hardware requirements</value>
+  </data>
+  <data name="HardwareRequirementsDisc" xml:space="preserve">
+    <value>{0}40GB{1} Disk</value>
+  </data>
+  <data name="HardwareRequirementsMemory" xml:space="preserve">
+    <value>{0}6GB{1} Memory</value>
+  </data>
+  <data name="HardwareRequirementsProcessor" xml:space="preserve">
+    <value>{0}2 Core{1} Processor</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="InstallationErrorHdr" xml:space="preserve">
+    <value>Installation failed</value>
+  </data>
+  <data name="InstallationErrorText" xml:space="preserve">
+    <value>An unexpected error occured during the installation process.</value>
+  </data>
+  <data name="InstallationPageHdr" xml:space="preserve">
+    <value>Welcome to ONLYOFFICE Control Panel</value>
+  </data>
+  <data name="InstallationPageTitle" xml:space="preserve">
+    <value>ONLYOFFICE Installation Page</value>
+  </data>
+  <data name="IPAddressPlaceholder" xml:space="preserve">
+    <value>Enter IP address</value>
+  </data>
+  <data name="OperatingSystemFedora" xml:space="preserve">
+    <value>Fedora 20 (64-bit)</value>
+  </data>
+  <data name="OperatingSystemUbuntu" xml:space="preserve">
+    <value>Ubuntu 15.04 (64-bit)</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="PasswordPlaceholder" xml:space="preserve">
+    <value>Enter the password</value>
+  </data>
+  <data name="ServerRequirements" xml:space="preserve">
+    <value>Minimum server requirements:</value>
+  </data>
+  <data name="SoftwareRequirements" xml:space="preserve">
+    <value>Software requirements</value>
+  </data>
+  <data name="SSHKey" xml:space="preserve">
+    <value>SSH key</value>
+  </data>
+  <data name="SSHKeyPlaceholder" xml:space="preserve">
+    <value>Choose a SSH key</value>
+  </data>
+  <data name="UserNamePlaceholder" xml:space="preserve">
+    <value>Enter the user name</value>
+  </data>
+  <data name="AcceptTermsLinkText" xml:space="preserve">
+    <value>terms and conditions of the Apache license</value>
+  </data>
+  <data name="AcceptTermsText" xml:space="preserve">
+    <value>by clicking this button you accept the</value>
+  </data>
+  <data name="CommunityServer" xml:space="preserve">
+    <value>Community Server</value>
+  </data>
+  <data name="CommunityServerHdr" xml:space="preserve">
+    <value>ONLYOFFICE Community Server</value>
+  </data>
+  <data name="CommunityServerText" xml:space="preserve">
+    <value>ONLYOFFICE Community Server is a collaborative system developed to manage documents, projects, customer relationship and email correspondence, all in one place.</value>
+  </data>
+  <data name="ConnectionSettingsConnectedFormText" xml:space="preserve">
+    <value>You're already connected to your server.</value>
+  </data>
+  <data name="ConnectionSettingsFormDescHdr" xml:space="preserve">
+    <value>ONLYOFFICE One Click Installation</value>
+  </data>
+  <data name="ConnectStepText" xml:space="preserve">
+    <value>Connect your server</value>
+  </data>
+  <data name="CustomStepText" xml:space="preserve">
+    <value>Customize settings*</value>
+  </data>
+  <data name="DocumentServer" xml:space="preserve">
+    <value>Document Server</value>
+  </data>
+  <data name="DocumentServerHdr" xml:space="preserve">
+    <value>ONLYOFFICE Document Server</value>
+  </data>
+  <data name="DocumentServerText" xml:space="preserve">
+    <value>ONLYOFFICE Document Server is an online office suite comprising viewers and editors for texts, spreadsheets and presentations, compatible with all popular formats, enabling to co-edit, comment and communicate in real time.</value>
+  </data>
+  <data name="InstallStepText" xml:space="preserve">
+    <value>Install ONLYOFFICE</value>
+  </data>
+  <data name="SetupFormHdr" xml:space="preserve">
+    <value>Setup Options</value>
+  </data>
+  <data name="SetupFormText" xml:space="preserve">
+    <value>Community and Document Server will be installed by default. Select Mail Server if you need it.</value>
+  </data>
+  <data name="MailServer" xml:space="preserve">
+    <value>Mail Server</value>
+  </data>
+  <data name="MailServerHdr" xml:space="preserve">
+    <value>ONLYOFFICE Mail Server</value>
+  </data>
+  <data name="MailServerText" xml:space="preserve">
+    <value>ONLYOFFICE Mail Server is a full-featured solution developed on the base of the iRedMail package, containing the following components: Postfix, Dovecot, SpamAssassin, ClamAV, OpenDKIM, Fail2ban. It allows you to create and manage mailboxes using corporate domain name.</value>
+  </data>
+  <data name="MailDomainPlaceholder" xml:space="preserve">
+    <value>Enter Domain Name</value>
+  </data>
+  <data name="ConnectionSettingsConnectedFormDescHdr" xml:space="preserve">
+    <value>Congratulations! Server connection established successfully.</value>
+  </data>
+  <data name="ExistVersionErrorHdr" xml:space="preserve">
+    <value>Installation error</value>
+  </data>
+  <data name="ExistVersionErrorText" xml:space="preserve">
+    <value>Remove previously installed ONLYOFFICE components and try again</value>
+  </data>
+  <data name="MailServerRequirementsHdr" xml:space="preserve">
+    <value>To configure Mail Server, the following DNS records are required:</value>
+  </data>
+  <data name="MailServerRequirementsItem_1" xml:space="preserve">
+    <value>A record (used to point a domain to the IP address of the host where this docker image is deployed).</value>
+  </data>
+  <data name="MailServerRequirementsItem_2" xml:space="preserve">
+    <value>Pointer (RTP) record or a reverse DNS record (used to map a network interface (IP) to a hostname).</value>
+  </data>
+  <data name="ContactSupport" xml:space="preserve">
+    <value>Contact us at</value>
+  </data>
+  <data name="InstallationProgressStep_Start" xml:space="preserve">
+    <value>Starting the installstion</value>
+  </data>
+  <data name="InstallationProgressStep_UploadFiles" xml:space="preserve">
+    <value>Files transfer</value>
+  </data>
+  <data name="InstallationProgressStep_End" xml:space="preserve">
+    <value>Installation complete</value>
+  </data>
+  <data name="InstallationProgressStep_GetOsInfo" xml:space="preserve">
+    <value>Checking the operating system information</value>
+  </data>
+  <data name="InstallationProgressStep_CheckPorts" xml:space="preserve">
+    <value>Checking ports</value>
+  </data>
+  <data name="InstallationProgressStep_InstallDocker" xml:space="preserve">
+    <value>Installing Docker service</value>
+  </data>
+  <data name="InstallationProgressStep_RebootServer" xml:space="preserve">
+    <value>Rebooting the server</value>
+  </data>
+  <data name="InstallationProgressStep_InstallDocumentServer" xml:space="preserve">
+    <value>Installing Document Server</value>
+  </data>
+  <data name="InstallationProgressStep_InstallMailServer" xml:space="preserve">
+    <value>Installing Mail Server</value>
+  </data>
+  <data name="InstallationProgressStep_InstallCommunityServer" xml:space="preserve">
+    <value>Installing Community Server</value>
+  </data>
+  <data name="InstallationProgressStep_WarmUp" xml:space="preserve">
+    <value>Initial Configuration</value>
+  </data>
+  <data name="SetupFormDescProgressHdr" xml:space="preserve">
+    <value>Installation in progress...</value>
+  </data>
+  <data name="SetupFormDescProgressText" xml:space="preserve">
+    <value>The ONLYOFFICE installation process may take a few minutes. Please wait.</value>
+  </data>
+  <data name="ContrrolPanelFeatureBackup" xml:space="preserve">
+    <value>Backup</value>
+  </data>
+  <data name="ContrrolPanelFeatureHttps" xml:space="preserve">
+    <value>HTTPS</value>
+  </data>
+  <data name="ContrrolPanelFeatureAudit" xml:space="preserve">
+    <value>Audit Trail</value>
+  </data>
+  <data name="ContrrolPanelFeatureUpdate" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="ContrrolPanelHdr" xml:space="preserve">
+    <value>Control Panel</value>
+  </data>
+  <data name="ContrrolPanelText" xml:space="preserve">
+    <value>ONLYOFFICE Control Panel is a new way to manage and configure your server in one click. It offers features like ...</value>
+  </data>
+  <data name="EmailPlaceholder" xml:space="preserve">
+    <value>Enter your email</value>
+  </data>
+  <data name="ServerSettingsFormDescHdr" xml:space="preserve">
+    <value>Congratulations, the installation process is successfully completed!</value>
+  </data>
+  <data name="ServerSettingsFormHdr" xml:space="preserve">
+    <value>Control Panel</value>
+  </data>
+  <data name="ServerSettingsFormText" xml:space="preserve">
+    <value>The Control Panel is in beta stage and will be available soon. Enter your email below to be the first to learn about the release.</value>
+  </data>
+  <data name="SourceDesc" xml:space="preserve">
+    <value>ONLYOFFICE Installer is distributed under the Apache license. The source code is listed on GitHub.</value>
+  </data>
+  <data name="SourceLinkText" xml:space="preserve">
+    <value>Fork me on GitHub</value>
+  </data>
+  <data name="CustomStepTitleText" xml:space="preserve">
+    <value>* Advanced configuration settings provided on commercial basis</value>
+  </data>
+  <data name="SetupFormDescHdr" xml:space="preserve">
+    <value>Congratulations! Server connection established successfully.</value>
+  </data>
+  <data name="ConnectionSettingsConnectedFormDescText" xml:space="preserve">
+    <value>To connect to a different server, you will need to disconnect first.</value>
+  </data>
+  <data name="ConnectionSettingsFormDescText" xml:space="preserve">
+    <value>An ONLYOFFICE Installer used to automate the deployement process of ONLYOFFICE Free Edition using the Docker container technology.  ONLYOFFICE Free Edition is an open source software that comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams.</value>
+  </data>
+  <data name="SetupFormDescText" xml:space="preserve">
+    <value>Read the information below to choose the ONLYOFFICE components that suit your needs best.</value>
+  </data>
+  <data name="UpdadeSetupOptionsDesc" xml:space="preserve">
+    <value>You need to manually remove previously installed ONLYOFFICE components before you can continue installation.</value>
+  </data>
+  <data name="SetupMailServerDesc" xml:space="preserve">
+    <value>We recommended that you install Mail Server together with other components. In case you decide to install it later you will need to remove all previously installed ONLYOFFICE components for successful installation.</value>
+  </data>
+  <data name="OperatingSystemCoreOS" xml:space="preserve">
+    <value>CoreOS 647.0.0 (stable)</value>
+  </data>
+  <data name="OperatingSystemOther" xml:space="preserve">
+    <value>any other distributive with kernel version 3.19</value>
+  </data>
+</root>
