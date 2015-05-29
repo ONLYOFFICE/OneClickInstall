@@ -142,6 +142,7 @@
     <Compile Include="Classes\EmailSender.cs" />
     <Compile Include="Classes\InstallationManager.cs" />
     <Compile Include="Helpers\CacheHelper.cs" />
+    <Compile Include="Helpers\CookieHelper.cs" />
     <Compile Include="Helpers\SshHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Settings.cs" />

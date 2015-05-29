@@ -87,7 +87,8 @@ namespace OneClickInstallation.Helpers
                             Host = settings[0],
                             Port = Convert.ToInt32(settings[1]),
                             Email = settings[2],
-                            Password = settings[3]
+                            Password = settings[3],
+                            EnableSsl = Convert.ToBoolean(settings[4])
                         };
                 }
                 catch (Exception ex)

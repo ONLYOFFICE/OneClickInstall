@@ -28,64 +28,93 @@ namespace OneClickInstallation.Helpers
     {
         public static ConnectionSettingsModel GetConnectionSettings(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return null;
+
             var key = "connectionSettings" + userId;
             return CacheGet<ConnectionSettingsModel>(key);
         }
 
         public static void SetConnectionSettings(string userId, ConnectionSettingsModel value)
         {
+            if (string.IsNullOrEmpty(userId)) return;
+
             var key = "connectionSettings" + userId;
-            CacheSet(key, value, TimeSpan.FromHours(1));
+            CacheSet(key, value, TimeSpan.FromDays(1));
         }
 
 
         public static InstallationComponentsModel GetInstalledComponents(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return null;
+
             var key = "installedComponents" + userId;
             return CacheGet<InstallationComponentsModel>(key);
         }
 
         public static void SetInstalledComponents(string userId, InstallationComponentsModel value)
         {
+            if (string.IsNullOrEmpty(userId)) return;
+
             var key = "installedComponents" + userId;
-            CacheSet(key, value, TimeSpan.FromHours(1));
+            CacheSet(key, value, TimeSpan.FromDays(1));
         }
 
 
         public static InstallationComponentsModel GetSelectedComponents(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return null;
+
             var key = "selectedComponents" + userId;
             return CacheGet<InstallationComponentsModel>(key);
         }
 
         public static void SetSelectedComponents(string userId, InstallationComponentsModel value)
         {
+            if (string.IsNullOrEmpty(userId)) return;
+
             var key = "selectedComponents" + userId;
-            CacheSet(key, value, TimeSpan.FromHours(1));
+            CacheSet(key, value, TimeSpan.FromDays(1));
         }
 
 
         public static InstallationProgressModel GetInstallationProgress(string userId)
         {
+            if (string.IsNullOrEmpty(userId)) return null;
+
             var key = "installationProgress" + userId;
             return CacheGet<InstallationProgressModel>(key);
         }
 
         public static void SetInstallationProgress(string userId, InstallationProgressModel value)
         {
+            if (string.IsNullOrEmpty(userId)) return;
+
             var key = "installationProgress" + userId;
-            CacheSet(key, value, TimeSpan.FromHours(1));
+            CacheSet(key, value, TimeSpan.FromDays(1));
+        }
+
+
+        public static void ClearCache(string userId)
+        {
+            SetConnectionSettings(userId, null);
+            SetInstalledComponents(userId, null);
+            SetInstalledComponents(userId, null);
+            SetInstalledComponents(userId, null);
         }
 
 
         public static string GetJsResuorce(string culture)
         {
+            if (string.IsNullOrEmpty(culture)) return null;
+
             var key = "jsResuorce" + culture;
             return CacheGet<string>(key);
         }
 
         public static void SetJsResuorce(string culture, string value)
         {
+            if (string.IsNullOrEmpty(culture)) return;
+
             var key = "jsResuorce" + culture;
             CacheSet(key, value, TimeSpan.FromDays(1));
         }

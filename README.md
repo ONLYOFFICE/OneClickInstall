@@ -52,7 +52,7 @@ This is used to correct the document formatting (\n\r issues in different operat
 
 Official website: [http://one-click-install.onlyoffice.com](http://one-click-install.onlyoffice.com "http://one-click-install.onlyoffice.com")
 
-Code repository: [https://github.com/ONLYOFFICE/one-click-install](https://github.com/ONLYOFFICE/one-click-install "https://github.com/ONLYOFFICE/one-click-install")
+Code repository: [https://github.com/ONLYOFFICE/OneClickInstall](https://github.com/ONLYOFFICE/OneClickInstall "https://github.com/ONLYOFFICE/OneClickInstall")
 
 License: [Apache v.2.0](http://www.apache.org/licenses/LICENSE-2.0 "Apache v.2.0")
 

@@ -37,22 +37,37 @@ namespace OneClickInstallation.Controllers
         {
             get
             {
-                return Regex.Replace(Request.UserHostAddress ?? string.Empty, "[^0-9-.a-zA-Z_=]", "_");
+                return CookieHelper.GetCookie();
             }
         }
 
         public ActionResult Index()
         {
-            var connectionSettings = CacheHelper.GetConnectionSettings(UserId);
+            ConnectionSettingsModel connectionSettings = null;
+            InstallationComponentsModel installedComponents = null;
+            InstallationComponentsModel selectedComponents = null;
+            InstallationProgressModel installationProgress = null;
+
+            if (!string.IsNullOrEmpty(UserId))
+            {
+                connectionSettings = CacheHelper.GetConnectionSettings(UserId);
+
+                if (connectionSettings != null)
+                {
+                    installedComponents = CacheHelper.GetInstalledComponents(UserId);
+                    selectedComponents = CacheHelper.GetSelectedComponents(UserId);
+                    installationProgress = CacheHelper.GetInstallationProgress(UserId);
+                }
+                else
+                {
+                    CookieHelper.ClearCookie();
+                    CacheHelper.ClearCache(UserId);
+                }
+            }
+
             ViewBag.ConnectionSettings = GetJsonString(connectionSettings);
-
-            var installedComponents = CacheHelper.GetInstalledComponents(UserId);
             ViewBag.InstalledComponents = GetJsonString(installedComponents);
-
-            var selectedComponents = CacheHelper.GetSelectedComponents(UserId);
             ViewBag.SelectedComponents = GetJsonString(selectedComponents);
-
-            var installationProgress = CacheHelper.GetInstallationProgress(UserId);
             ViewBag.InstallationProgress = GetJsonString(installationProgress);
 
             return View();
@@ -72,7 +87,7 @@ namespace OneClickInstallation.Controllers
                 {
                     success = true,
                     message = OneClickCommonResource.FileUploadedMsg,
-                    fileName = FileHelper.SaveFile(UserId, Request.Files[0])
+                    fileName = FileHelper.SaveFile(Request.Files[0])
                 });
             }
             catch (Exception ex)
@@ -94,21 +109,32 @@ namespace OneClickInstallation.Controllers
             try
             {
                 InstallationComponentsModel installedComponents = null;
-                
+                InstallationComponentsModel selectedComponents = null;
+                InstallationProgressModel installationProgress = null;
+
                 if (connectionSettings != null)
                 {
                     installedComponents = SshHelper.Connect(UserId, connectionSettings);
-                }
+                    installationProgress = CacheHelper.GetInstallationProgress(UserId);
+                    selectedComponents = CacheHelper.GetSelectedComponents(UserId);
 
-                CacheHelper.SetConnectionSettings(UserId, connectionSettings);
-                CacheHelper.SetInstalledComponents(UserId, installedComponents);
+                    CacheHelper.SetConnectionSettings(UserId, connectionSettings);
+                    CacheHelper.SetInstalledComponents(UserId, installedComponents);
+                }
+                else
+                {
+                    CookieHelper.ClearCookie();
+                    CacheHelper.ClearCache(UserId);
+                }
 
                 return Json(new
                     {
                         success = true,
                         message = string.Empty,
                         connectionSettings = GetJsonString(connectionSettings),
-                        installedComponents = GetJsonString(installedComponents)
+                        installedComponents = GetJsonString(installedComponents),
+                        installationProgress = GetJsonString(installationProgress),
+                        selectedComponents = GetJsonString(selectedComponents)
                     });
             }
             catch (Exception ex)
@@ -262,7 +288,7 @@ namespace OneClickInstallation.Controllers
                         Host = emailSender.Host,
                         Port = emailSender.Port,
                         Timeout = 10000,
-                        EnableSsl = true,
+                        EnableSsl = emailSender.EnableSsl,
                         DeliveryMethod = SmtpDeliveryMethod.Network,
                         UseDefaultCredentials = false,
                         Credentials = new NetworkCredential(emailSender.Email.Split('@')[0], emailSender.Password)

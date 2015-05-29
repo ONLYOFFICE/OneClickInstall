@@ -518,9 +518,16 @@ var InstallManager = (function () {
                 if (data.success) {
                     SetupInfo.connectionSettings = JSON.parse(data.connectionSettings);
                     SetupInfo.installedComponents = JSON.parse(data.installedComponents);
+                    SetupInfo.installationProgress = JSON.parse(data.installationProgress);
+                    SetupInfo.selectedComponents = JSON.parse(data.selectedComponents);
 
                     var targetForm = getTargetForm();
                     displayForm(targetForm);
+                    
+                    if (installationIsPerformed()) {
+                        lockForm(true);
+                        checkInstallProgress();
+                    }
                 } else {
                     var message = window.OneClickJsResource["ErrorInstallation" + data.errorCode];
                     if (message) {

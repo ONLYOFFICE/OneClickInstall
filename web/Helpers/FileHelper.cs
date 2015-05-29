@@ -29,7 +29,9 @@ namespace OneClickInstallation.Helpers
     {
         private const string DataFolder = "~/App_Data/";
 
-        public static string SaveFile(string userId, HttpPostedFileBase file)
+        private const string TmpFolder = "tmp";
+
+        public static string SaveFile(HttpPostedFileBase file)
         {
             if (file == null)
                 throw new Exception(OneClickCommonResource.ErrorFileIsNull);
@@ -42,24 +44,32 @@ namespace OneClickInstallation.Helpers
             if (fileName == null)
                 throw new Exception(OneClickCommonResource.ErrorFileIsNull);
 
-            var folderPath = HttpContext.Current.Server.MapPath(DataFolder + userId);
+            var folderPath = HttpContext.Current.Server.MapPath(DataFolder + TmpFolder);
 
             if (!Directory.Exists(folderPath))
                 Directory.CreateDirectory(folderPath);
 
-            file.SaveAs(Path.Combine(folderPath, fileName));
+            var filePath = Path.Combine(folderPath, fileName);
 
-            return fileName;
+            var index = 1;
+            var newFileName = fileName;
+
+            while (File.Exists(filePath))
+            {
+                newFileName = string.Format("{0} ({1}){2}", Path.GetFileNameWithoutExtension(fileName), index++, Path.GetExtension(fileName));
+                filePath = Path.Combine(folderPath, newFileName);
+            }
+
+            file.SaveAs(filePath);
+
+            return newFileName;
         }
 
-        public static string GetFile(string userId, string fileName)
+        public static string GetFile(string fileName)
         {
-            var filePath = Path.Combine(HttpContext.Current.Server.MapPath(DataFolder + userId), fileName);
+            var filePath = Path.Combine(HttpContext.Current.Server.MapPath(DataFolder + TmpFolder), fileName);
 
-            if (File.Exists(filePath))
-            {
-                return filePath;
-            }
+            if (File.Exists(filePath)) return filePath;
 
             throw new Exception(OneClickCommonResource.ErrorFileNotFound);
         }
@@ -75,7 +85,15 @@ namespace OneClickInstallation.Helpers
                 content = progressModel.ErrorMessage;
             }
 
-            var filePath = Path.Combine(HttpContext.Current.Server.MapPath(DataFolder + userId),  fileName);
+            if (string.IsNullOrEmpty(userId))
+                userId = TmpFolder;
+
+            var folderPath = HttpContext.Current.Server.MapPath(DataFolder + userId);
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, fileName);
 
             using (var sw = new StreamWriter(filePath, true))
             {

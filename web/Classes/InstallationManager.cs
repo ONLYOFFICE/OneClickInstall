@@ -67,14 +67,25 @@ namespace OneClickInstallation.Classes
                 _sftpClient.KeepAliveInterval = TimeSpan.FromMinutes(30);
                 _sftpClient.SendKeepAlive();
 
+                UpdateAuth();
+
                 return _sftpClient;
             }
+        }
+
+        private void UpdateAuth()
+        {
+            if (UserId == ConnectionInfo.Host) return;
+
+            UserId = ConnectionInfo.Host;
+
+            CookieHelper.SetCookie(UserId);
         }
 
         public InstallationManager(string userId, ConnectionSettingsModel connectionSettings, InstallationComponentsModel installationComponents = null)
         {
             UserId = userId;
-            ConnectionInfo = GetConnectionInfo(userId, connectionSettings);
+            ConnectionInfo = GetConnectionInfo(connectionSettings);
             InstallationProgress = CacheHelper.GetInstallationProgress(userId) ?? new InstallationProgressModel();
             InstallationComponents = installationComponents;
         }
@@ -133,7 +144,7 @@ namespace OneClickInstallation.Classes
             return CacheHelper.GetInstalledComponents(UserId);
         }
 
-        private static ConnectionInfo GetConnectionInfo(string userId, ConnectionSettingsModel connectionSettings)
+        private static ConnectionInfo GetConnectionInfo(ConnectionSettingsModel connectionSettings)
         {
             var authenticationMethods = new List<AuthenticationMethod>();
 
@@ -144,7 +155,7 @@ namespace OneClickInstallation.Classes
 
             if (!string.IsNullOrEmpty(connectionSettings.SshKey))
             {
-                var keyFiles = new[] { new PrivateKeyFile(FileHelper.GetFile(userId, connectionSettings.SshKey)) };
+                var keyFiles = new[] { new PrivateKeyFile(FileHelper.GetFile(connectionSettings.SshKey)) };
                 authenticationMethods.Add(new PrivateKeyAuthenticationMethod(connectionSettings.UserName, keyFiles));
             }
 
