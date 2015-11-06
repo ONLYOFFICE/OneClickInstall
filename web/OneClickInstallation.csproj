@@ -247,6 +247,9 @@
     <Content Include="Executables\tools\check-previous-version.sh" />
     <Content Include="Executables\tools\make-dir.sh" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\install.sh" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
