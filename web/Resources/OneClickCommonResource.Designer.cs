@@ -97,7 +97,7 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to © Ascensio System SIA 2015.
+        ///   Looks up a localized string similar to © Ascensio System SIA {0}. All rights reserved.
         /// </summary>
         public static string Copyright {
             get {
@@ -115,20 +115,20 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Empty mail sender settings.
+        ///   Looks up a localized string similar to Open Your Web-Office.
         /// </summary>
-        public static string EmailSenderIsNull {
+        public static string EnterOnlyoffice {
             get {
-                return ResourceManager.GetString("EmailSenderIsNull", resourceCulture);
+                return ResourceManager.GetString("EnterOnlyoffice", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Access your ONLYOFFICE.
+        ///   Looks up a localized string similar to File extension is incorrect.
         /// </summary>
-        public static string Enter {
+        public static string ErrorFileExt {
             get {
-                return ResourceManager.GetString("Enter", resourceCulture);
+                return ResourceManager.GetString("ErrorFileExt", resourceCulture);
             }
         }
         
@@ -169,11 +169,38 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License file is already exist.
+        /// </summary>
+        public static string ErrorLicenseFileExist {
+            get {
+                return ResourceManager.GetString("ErrorLicenseFileExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License file is not valid.
+        /// </summary>
+        public static string ErrorLicenseFileNotValid {
+            get {
+                return ResourceManager.GetString("ErrorLicenseFileNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Progress is null.
         /// </summary>
         public static string ErrorProgressIsNull {
             get {
                 return ResourceManager.GetString("ErrorProgressIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request Info is null.
+        /// </summary>
+        public static string ErrorRequestInfoIsNull {
+            get {
+                return ResourceManager.GetString("ErrorRequestInfoIsNull", resourceCulture);
             }
         }
         
@@ -223,6 +250,15 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Get License File.
+        /// </summary>
+        public static string GetLicenseFile {
+            get {
+                return ResourceManager.GetString("GetLicenseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google+.
         /// </summary>
         public static string Google {
@@ -264,15 +300,6 @@ namespace OneClickInstallation.Resources {
         public static string MetaKeywords {
             get {
                 return ResourceManager.GetString("MetaKeywords", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Notify me.
-        /// </summary>
-        public static string Notify {
-            get {
-                return ResourceManager.GetString("Notify", resourceCulture);
             }
         }
         

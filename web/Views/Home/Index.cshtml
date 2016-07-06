@@ -16,18 +16,21 @@
     <div class="popup-caption">
         <div class="popup-error"></div>
         @OneClickHomePageResource.ConnectionErrorHdr
-        <div class="popup-close">x</div>
+        <div class="popup-close"></div>
     </div>
     <div class="popup-body">
         <div class="bottom-indent">
             <div class="error-message"></div>
             <div class="default-message">
-                @OneClickHomePageResource.ConnectionErrorText_1
-                <br/>
-                @OneClickHomePageResource.ConnectionErrorText_2
+                <div>
+                    @OneClickHomePageResource.ConnectionErrorText_1<br/>
+                    @OneClickHomePageResource.ConnectionErrorText_2
+                </div>
+                <br>
+                <a href="@Settings.HelpUrl" target="_blank" class="underline">@OneClickHomePageResource.LearnMore</a>
             </div>
         </div>
-        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+        <a class="button black okbtn">@OneClickCommonResource.Ok</a>
     </div>
 </div>
 
@@ -35,7 +38,7 @@
     <div class="popup-caption">
         <div class="popup-error"></div>
         @OneClickHomePageResource.InstallationErrorHdr
-        <div class="popup-close">x</div>
+        <div class="popup-close"></div>
     </div>
     <div class="popup-body">
         <div class="bottom-indent">
@@ -43,9 +46,9 @@
             <div class="default-message">@OneClickHomePageResource.InstallationErrorText</div>
             <br>
             <span>@OneClickHomePageResource.ContactSupport&nbsp;</span>
-            <a href="mailto:@Settings.SupportEmail" class="underline">@Settings.SupportEmail</a>
+            <a href="@Settings.DevUrl" target="_blank" class="underline">@Settings.DevUrl</a>
         </div>
-        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+        <a class="button black okbtn">@OneClickCommonResource.Ok</a>
     </div>
 </div>
 
@@ -53,7 +56,7 @@
     <div class="popup-caption">
         <div class="popup-error"></div>
         @OneClickHomePageResource.ExistVersionErrorHdr
-        <div class="popup-close">x</div>
+        <div class="popup-close"></div>
     </div>
     <div class="popup-body">
         <div class="bottom-indent">
@@ -64,30 +67,80 @@
                 </div>
                 <br>
                 <span>@OneClickHomePageResource.ContactSupport&nbsp;</span>
-                <a href="mailto:@Settings.SupportEmail" class="underline">@Settings.SupportEmail</a>
+                <a href="@Settings.DevUrl" target="_blank" class="underline">@Settings.DevUrl</a>
             </div>
         </div>
-        <a class="button dark small okbtn">@OneClickCommonResource.Ok</a>
+        <a class="button black okbtn">@OneClickCommonResource.Ok</a>
     </div>
 </div>
 
+@if (ViewBag.Enterprise)
+{
+    <div id="trialPop" class="popup">
+        <div class="popup-caption">
+            @OneClickHomePageResource.RequestForm
+            <div class="popup-close"></div>
+        </div>
+        <div class="popup-body">
+            <div class="disconnected" style="height: 480px;">
+                <div class="bottom-indent label">
+                    @OneClickHomePageResource.TrialDescText
+                </div>
+                <div class="bottom-indent">
+                    <input id="name" type="text" class="group-top" placeholder="@OneClickHomePageResource.NamePlaceholder" />
+                    <input id="email" type="text" class="group-center" placeholder="@OneClickHomePageResource.EmailPlaceholder" />
+                    <input id="phone" type="text" class="group-center" placeholder="@OneClickHomePageResource.PhonePlaceholder" />
+                    <input id="companyName" type="text" class="group-center" placeholder="@OneClickHomePageResource.CompanyNamePlaceholder" />
+                    <div class="custom-select group-center">
+                        <input id="companySize" type="text" class="custom-select-value" placeholder="@OneClickHomePageResource.CompanySizePlaceholder" readonly="readonly"/>
+                        <div class="custom-select-switch"></div>
+                        <div class="custom-select-options">
+                            <div class="custom-select-options-inner">
+                                <div class="custom-select-option" data-value="5">@String.Format(OneClickHomePageResource.EmployeesCount, "1 - 5")</div>
+                                <div class="custom-select-option" data-value="14">@String.Format(OneClickHomePageResource.EmployeesCount, "6 - 14")</div>
+                                <div class="custom-select-option" data-value="64">@String.Format(OneClickHomePageResource.EmployeesCount, "15 - 64")</div>
+                                <div class="custom-select-option" data-value="350">@String.Format(OneClickHomePageResource.EmployeesCount, "65 - 350")</div>
+                                <div class="custom-select-option" data-value="1499">@String.Format(OneClickHomePageResource.EmployeesCount, "351 - 1499")</div>
+                                <div class="custom-select-option" data-value="1500">@String.Format(OneClickHomePageResource.EmployeesMoreThanCount, "1500")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <input id="position" type="text" class="group-bottom" placeholder="@OneClickHomePageResource.PositionPlaceholder" />
+                </div>
+                <a id="trialBtn" class="button black">@OneClickCommonResource.GetLicenseFile</a>
+            </div>
+            <div class="connected display-none" style="height: 480px;">
+                <h1 class="blue bottom-indent">@OneClickHomePageResource.TrialReadyText</h1>
+                <a class="button green okbtn">@OneClickCommonResource.Ok</a>
+            </div>
+        </div>
+    </div>
+}
+
+
 @section scripts {
-    
+
     @Scripts.Render("~/bundles/homepage")
-    
+
     <script>
-        $(function() {
+        $(function () {
+
+            ActionUrl.UploadFile = '@Url.Action("UploadFile", "Home")';
+            ActionUrl.Connect = '@Url.Action("Connect", "Home")';
+            ActionUrl.StartInstall = '@Url.Action("StartInstall", "Home")';
+            ActionUrl.InstallProgress = '@Url.Action("InstallProgress", "Home")';
 
             SetupInfo.connectionSettings = JSON.parse(@Html.Raw(Json.Encode(ViewBag.ConnectionSettings)));
+            SetupInfo.availableComponents = JSON.parse(@Html.Raw(Json.Encode(ViewBag.AvailableComponents)));
             SetupInfo.installedComponents = JSON.parse(@Html.Raw(Json.Encode(ViewBag.InstalledComponents)));
             SetupInfo.selectedComponents = JSON.parse(@Html.Raw(Json.Encode(ViewBag.SelectedComponents)));
             SetupInfo.installationProgress = JSON.parse(@Html.Raw(Json.Encode(ViewBag.InstallationProgress)));
+            SetupInfo.osInfo = JSON.parse(@Html.Raw(Json.Encode(ViewBag.OsInfo)));
+            SetupInfo.trialFileName = '@Settings.TrialFileName';
+            SetupInfo.enterprise = Boolean(@(ViewBag.Enterprise ? 1 : 0));
 
-            InstallManager.init('@Url.Action("UploadFile", "Home")',
-                '@Url.Action("Connect", "Home")',
-                '@Url.Action("StartInstall", "Home")',
-                '@Url.Action("InstallProgress", "Home")',
-                '@Url.Action("SendEmail", "Home")');
+            InstallManager.init();
+
         });
     </script>
 }

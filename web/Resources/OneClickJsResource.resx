@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailSendedMsg" xml:space="preserve">
-    <value>Email sended</value>
-  </data>
   <data name="ErrorInstallation1" xml:space="preserve">
     <value>Currently only supports 64bit OS's</value>
   </data>
@@ -127,7 +124,7 @@
     <value>Not supported OS</value>
   </data>
   <data name="ErrorInstallation3" xml:space="preserve">
-    <value>The following ports must be open: 80, 443 (25 for Mail Server)</value>
+    <value>The required ports are closed</value>
   </data>
   <data name="ErrorInstallation4" xml:space="preserve">
     <value>Please, set hostname for mail server</value>
@@ -141,6 +138,18 @@
   <data name="ErrorInstallation7" xml:space="preserve">
     <value>Kernel version not supported</value>
   </data>
+  <data name="ErrorInstallation8" xml:space="preserve">
+    <value>To perform this action you must be logged in with root rights</value>
+  </data>
+  <data name="ErrorInstallationExternal1" xml:space="preserve">
+    <value>Cannot create trial license. Invalid input parameter.</value>
+  </data>
+  <data name="ErrorInstallationExternal2" xml:space="preserve">
+    <value>Cannot create trial license.  An internal error is occured.</value>
+  </data>
+  <data name="ErrorInstallationExternal3" xml:space="preserve">
+    <value>Cannot create trial license. The hostname has been assigned to another email address.</value>
+  </data>
   <data name="ErrorInvalidDomainName" xml:space="preserve">
     <value>Invalid domain name</value>
   </data>
@@ -153,16 +162,7 @@
   <data name="InstallationStepProcessMsg" xml:space="preserve">
     <value>In the process</value>
   </data>
-  <data name="InstallationStepRebootMsg" xml:space="preserve">
-    <value>Reboot the server</value>
-  </data>
   <data name="LoaderMsg" xml:space="preserve">
     <value>Please wait...</value>
-  </data>
-  <data name="NotyfyEmailBody" xml:space="preserve">
-    <value>I want to be notified about the release of a new product. My email: {0}</value>
-  </data>
-  <data name="NotyfyEmailSubject" xml:space="preserve">
-    <value>Control Panel Subscription</value>
   </data>
 </root>

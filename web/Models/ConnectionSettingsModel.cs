@@ -25,5 +25,7 @@ namespace OneClickInstallation.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public string SshKey { get; set; }
+        public string LicenseKey { get; set; }
+        public bool Enterprise { get; set; }
     }
 }

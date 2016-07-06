@@ -18,8 +18,11 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Web;
 using System.Web.Caching;
+using OneClickInstallation.Classes;
 using OneClickInstallation.Models;
 
 namespace OneClickInstallation.Helpers
@@ -94,12 +97,29 @@ namespace OneClickInstallation.Helpers
         }
 
 
-        public static void ClearCache(string userId)
+        public static OsInfo GetOsInfo(string userId)
         {
-            SetConnectionSettings(userId, null);
-            SetInstalledComponents(userId, null);
-            SetInstalledComponents(userId, null);
-            SetInstalledComponents(userId, null);
+            var key = "osInfo" + userId;
+            return CacheGet<OsInfo>(key);
+        }
+
+        public static void SetOsInfo(string userId, OsInfo value)
+        {
+            var key = "osInfo" + userId;
+            CacheSet(key, value, TimeSpan.FromDays(1));
+        }
+
+
+        public static RequestInfoModel GetRequestInfo(string userId)
+        {
+            var key = "requestInfo" + userId;
+            return CacheGet<RequestInfoModel>(key);
+        }
+
+        public static void SetRequestInfo(string userId, RequestInfoModel value)
+        {
+            var key = "requestInfo" + userId;
+            CacheSet(key, value, TimeSpan.FromDays(1));
         }
 
 
@@ -117,6 +137,40 @@ namespace OneClickInstallation.Helpers
 
             var key = "jsResuorce" + culture;
             CacheSet(key, value, TimeSpan.FromDays(1));
+        }
+
+
+        public static InstallationComponentsModel GetAvailableComponents(bool enterprise)
+        {
+            var res = CacheGet<InstallationComponentsModel>(enterprise ? "availableEnterpriseComponents" : "availableComponents");
+            return res ?? TagHelper.InitializeAvailableTags(enterprise);
+        }
+
+        public static void SetAvailableComponents(bool enterprise, InstallationComponentsModel value)
+        {
+            CacheSet(enterprise ? "availableEnterpriseComponents" : "availableComponents", value, TimeSpan.FromDays(1));
+        }
+
+
+        public static void ClearUserCache(string userId)
+        {
+            SetConnectionSettings(userId, null);
+            SetInstalledComponents(userId, null);
+            SetSelectedComponents(userId, null);
+            SetInstallationProgress(userId, null);
+            SetOsInfo(userId, null);
+            SetRequestInfo(userId, null);
+        }
+
+        public static void ClearCache()
+        {
+            foreach (var lang in LangHelper.GetLanguages())
+            {
+                SetJsResuorce(new CultureInfo(lang).TwoLetterISOLanguageName, null);
+            }
+
+            SetAvailableComponents(true, null);
+            SetAvailableComponents(false, null);
         }
 
 

@@ -130,16 +130,16 @@
     <value>Control panel</value>
   </data>
   <data name="Copyright" xml:space="preserve">
-    <value>© Ascensio System SIA 2015</value>
+    <value>© Ascensio System SIA {0}. All rights reserved</value>
   </data>
   <data name="Disconnect" xml:space="preserve">
     <value>Disconnect</value>
   </data>
-  <data name="EmailSenderIsNull" xml:space="preserve">
-    <value>Empty mail sender settings</value>
+  <data name="EnterOnlyoffice" xml:space="preserve">
+    <value>Open Your Web-Office</value>
   </data>
-  <data name="Enter" xml:space="preserve">
-    <value>Access your ONLYOFFICE</value>
+  <data name="ErrorFileExt" xml:space="preserve">
+    <value>File extension is incorrect</value>
   </data>
   <data name="ErrorFileIsNull" xml:space="preserve">
     <value>File is null</value>
@@ -153,8 +153,17 @@
   <data name="ErrorFilesNotTransfered" xml:space="preserve">
     <value>The files are not transferred</value>
   </data>
+  <data name="ErrorLicenseFileExist" xml:space="preserve">
+    <value>License file is already exist</value>
+  </data>
+  <data name="ErrorLicenseFileNotValid" xml:space="preserve">
+    <value>License file is not valid</value>
+  </data>
   <data name="ErrorProgressIsNull" xml:space="preserve">
     <value>Progress is null</value>
+  </data>
+  <data name="ErrorRequestInfoIsNull" xml:space="preserve">
+    <value>Request Info is null</value>
   </data>
   <data name="ErrorRequiredComponents" xml:space="preserve">
     <value>Community and Documents Servers are required</value>
@@ -171,6 +180,9 @@
   <data name="FollowUs" xml:space="preserve">
     <value>Follow us on:</value>
   </data>
+  <data name="GetLicenseFile" xml:space="preserve">
+    <value>Get License File</value>
+  </data>
   <data name="Google" xml:space="preserve">
     <value>Google+</value>
   </data>
@@ -185,9 +197,6 @@
   </data>
   <data name="MetaKeywords" xml:space="preserve">
     <value>online document editor, project management tool, business tools, crm system, online collaboration, cloud office, online word, documents management, online spreadsheets, online office, collaborative editing, online office application, online docs</value>
-  </data>
-  <data name="Notify" xml:space="preserve">
-    <value>Notify me</value>
   </data>
   <data name="Ok" xml:space="preserve">
     <value>OK</value>

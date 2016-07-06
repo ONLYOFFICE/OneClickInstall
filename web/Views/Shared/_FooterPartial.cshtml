@@ -1,7 +1,8 @@
-﻿
+﻿@using OneClickInstallation.Resources
+
 <div class="layout-content-wrapper clear-fix">
     <div class="copyright">
-        @OneClickCommonResource.Copyright
+        @String.Format(OneClickCommonResource.Copyright, DateTime.Now.Year)
     </div>
 
     <div class="social-links clear-fix">

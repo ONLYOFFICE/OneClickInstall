@@ -14,17 +14,20 @@
 COMMUNITY_CONTAINER_NAME="onlyoffice-community-server";
 DOCUMENT_CONTAINER_NAME="onlyoffice-document-server";
 MAIL_CONTAINER_NAME="onlyoffice-mail-server";
-CONTROLPANEL_CONTAINER_NAME="onlyoffice-controlpanel";
+CONTROLPANEL_CONTAINER_NAME="onlyoffice-control-panel";
 
-COMMUNITY_IMAGE_NAME="onlyoffice/communityserver";
-DOCUMENT_IMAGE_NAME="onlyoffice/documentserver";
+COMMUNITY_IMAGE_NAME="onlyoffice4enterprise/communityserver-ee";
+DOCUMENT_IMAGE_NAME="onlyoffice4enterprise/documentserver-ee";
 MAIL_IMAGE_NAME="onlyoffice/mailserver";
-CONTROLPANEL_IMAGE_NAME="onlyoffice/controlpanel";
+CONTROLPANEL_IMAGE_NAME="onlyoffice4enterprise/controlpanel-ee";
 
 COMMUNITY_VERSION="";
 DOCUMENT_VERSION="";
 MAIL_VERSION="";
 CONTROLPANEL_VERSION="";
+
+MAIL_SERVER_HOST="";
+DOCUMENT_SERVER_HOST="";
 
 LICENSE_FILE_PATH="";
 MAIL_DOMAIN_NAME="";
@@ -50,6 +53,7 @@ PULL_DOCUMENT_SERVER="false"
 PULL_MAIL_SERVER="false"
 PULL_CONTROLPANEL="false"
 
+USE_AS_EXTERNAL_SERVER="false"
 
 while [ "$1" != "" ]; do
 	case $1 in
@@ -110,6 +114,20 @@ while [ "$1" != "" ]; do
 			fi
 		;;
 
+		-dip | --documentserverip  )
+			if [ "$2" != "" ]; then
+				DOCUMENT_SERVER_HOST=$2
+				shift
+			fi
+		;;
+		
+		-mip | --mailserverip  )
+			if [ "$2" != "" ]; then
+				MAIL_SERVER_HOST=$2
+				shift
+			fi
+		;;
+		
 		-cv | --communityversion )
 			if [ "$2" != "" ]; then
 				COMMUNITY_VERSION=$2
@@ -242,7 +260,14 @@ while [ "$1" != "" ]; do
 				shift
 			fi
 		;;
-
+		
+		-es | --useasexternalserver )
+			if [ "$2" != "" ]; then
+				USE_AS_EXTERNAL_SERVER=$2
+				shift
+			fi
+		;;
+		
 		-? | -h | --help )
 			echo "  Usage $0 [PARAMETER] [[PARAMETER], ...]"
 			echo "    Parameters:"
@@ -256,7 +281,9 @@ while [ "$1" != "" ]; do
 			echo "      -cpi, --controlpanelimage         control panel image name"
 			echo "      -cv, --communityversion           community version"
 			echo "      -dv, --documentversion            document version"
+			echo "      -dip, --documentserverip          document server ip"
 			echo "      -mv, --mailversion                mail version"
+			echo "      -mip, --mailserverip              mail server ip"
 			echo "      -cpv, --controlpanelversion       control panel version"
 			echo "      -lf, --licensefile                license file path"
 			echo "      -md, --maildomain                 mail domail name"
@@ -273,6 +300,7 @@ while [ "$1" != "" ]; do
 			echo "      -pds, --pulldocumentserver        pull document server (true|false)"
 			echo "      -pms, --pullmailserver            pull mail server (true|false)"
 			echo "      -pcp, --pullcontrolpanel          pull control panel (true|false)"
+			echo "      -es, --useasexternalserver        use as external server (true|false)"
 			echo "      -?, -h, --help                    this help"
 			echo
 			exit 0
@@ -710,6 +738,7 @@ check_bindings () {
 install_document_server () {
 
 	DOCUMENT_SERVER_ID=$(sudo docker inspect --format='{{.Id}}' ${DOCUMENT_CONTAINER_NAME});
+    DOCUMENT_SERVER_ADDITIONAL_PORTS="";
 
 	if [[ -n ${DOCUMENT_SERVER_ID} ]]; then
 		if [ "$UPDATE" == "true" ]; then
@@ -726,7 +755,10 @@ install_document_server () {
 		DOCUMENT_VERSION=$(get_available_version "$DOCUMENT_IMAGE_NAME");
 	fi
 
-	sudo docker run -i -t -d --restart=always --name ${DOCUMENT_CONTAINER_NAME} \
+	if [ "${USE_AS_EXTERNAL_SERVER}" == "true" ]; then
+		DOCUMENT_SERVER_ADDITIONAL_PORTS="-p 80:80 -p 443:443";
+	fi
+	sudo docker run -i -t -d --restart=always --name ${DOCUMENT_CONTAINER_NAME} ${DOCUMENT_SERVER_ADDITIONAL_PORTS} \
 	-v /app/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data \
 	-v /app/onlyoffice/DocumentServer/logs:/var/log/onlyoffice \
 	${DOCUMENT_IMAGE_NAME}:${DOCUMENT_VERSION}
@@ -742,6 +774,8 @@ install_document_server () {
 install_mail_server () {
 	MAIL_SERVER_ID=$(sudo docker inspect --format='{{.Id}}' ${MAIL_CONTAINER_NAME});
 
+	MAIL_SERVER_ADDITIONAL_PORTS="";
+	
 	if [[ -n ${MAIL_SERVER_ID} ]]; then
 		if [ "$UPDATE" == "true" ]; then
 			check_bindings $MAIL_SERVER_ID;
@@ -756,28 +790,31 @@ install_mail_server () {
 	if [[ -z ${MAIL_VERSION} ]]; then
 		MAIL_VERSION=$(get_available_version "$MAIL_IMAGE_NAME");
 	fi
-
+		
+	if [ "${USE_AS_EXTERNAL_SERVER}" == "true" ]; then
+		MAIL_SERVER_ADDITIONAL_PORTS="-p 3306:3306 -p 8081:8081";
+	fi
+	
+	RUN_COMMAND="sudo docker run --privileged -i -t -d --restart=always --name ${MAIL_CONTAINER_NAME} ${MAIL_SERVER_ADDITIONAL_PORTS} -p 25:25 -p 143:143 -p 587:587";
+	RUN_COMMAND="${RUN_COMMAND} -v /app/onlyoffice/MailServer/data:/var/vmail";
+	RUN_COMMAND="${RUN_COMMAND} -v /app/onlyoffice/MailServer/data/certs:/etc/pki/tls/mailserver";
+	RUN_COMMAND="${RUN_COMMAND} -v /app/onlyoffice/MailServer/logs:/var/log";
+	RUN_COMMAND="${RUN_COMMAND} -v /app/onlyoffice/MailServer/mysql:/var/lib/mysql";
+	
 	if [ "$UPDATE" != "true" ]; then
 
 		if  [[ -z ${MAIL_DOMAIN_NAME} ]]; then
 			echo "Please, set domain name for mail server"
 			exit 0;
 		fi
-
-		sudo docker run --privileged -i -t -d --restart=always --name ${MAIL_CONTAINER_NAME} -p 25:25 -p 143:143 -p 587:587 \
-		-v /app/onlyoffice/MailServer/data:/var/vmail \
-		-v /app/onlyoffice/MailServer/data/certs:/etc/pki/tls/mailserver \
-		-v /app/onlyoffice/MailServer/logs:/var/log -v \
-		/app/onlyoffice/MailServer/mysql:/var/lib/mysql -h ${MAIL_DOMAIN_NAME} ${MAIL_IMAGE_NAME}:${MAIL_VERSION}
-
+		
+		RUN_COMMAND="${RUN_COMMAND} -h ${MAIL_DOMAIN_NAME} ${MAIL_IMAGE_NAME}:${MAIL_VERSION}";
 	else
-		sudo docker run --privileged -i -t -d --restart=always --name ${MAIL_CONTAINER_NAME} -p 25:25 -p 143:143 -p 587:587 \
-		-v /app/onlyoffice/MailServer/data:/var/vmail \
-		-v /app/onlyoffice/MailServer/data/certs:/etc/pki/tls/mailserver \
-		-v /app/onlyoffice/MailServer/logs:/var/log -v \
-		/app/onlyoffice/MailServer/mysql:/var/lib/mysql ${MAIL_IMAGE_NAME}:${MAIL_VERSION}
+		RUN_COMMAND="${RUN_COMMAND} ${MAIL_IMAGE_NAME}:${MAIL_VERSION}";
 	fi
 
+	${RUN_COMMAND};
+	
 	MAIL_SERVER_ID=$(sudo docker inspect --format='{{.Id}}' ${MAIL_CONTAINER_NAME});
 
 	if [[ -z ${MAIL_SERVER_ID} ]]; then
@@ -789,6 +826,8 @@ install_mail_server () {
 install_controlpanel () {
 	CONTROL_PANEL_ID=$(sudo docker inspect --format='{{.Id}}' ${CONTROLPANEL_CONTAINER_NAME});
 
+	CONTROLPANEL_ADDITIONS_PARAMS="";
+	
 	if [[ -n ${CONTROL_PANEL_ID} ]]; then
 		if [ "$UPDATE" == "true" ]; then
 			check_bindings $CONTROL_PANEL_ID;
@@ -804,7 +843,19 @@ install_controlpanel () {
 		CONTROLPANEL_VERSION=$(get_available_version "$CONTROLPANEL_IMAGE_NAME");
 	fi
 
-	 sudo docker run -i -t -d --restart=always --name ${CONTROLPANEL_CONTAINER_NAME} \
+	if [[ -n ${MAIL_SERVER_HOST} ]]; then
+		CONTROLPANEL_ADDITIONS_PARAMS="${CONTROLPANEL_ADDITIONS_PARAMS} -e MAIL_SERVER_EXTERNAL=true";
+	fi
+
+	if [[ -n ${DOCUMENT_SERVER_HOST} ]]; then
+		CONTROLPANEL_ADDITIONS_PARAMS="${CONTROLPANEL_ADDITIONS_PARAMS} -e DOCUMENT_SERVER_EXTERNAL=true";	
+	fi
+	
+	if [[ -n ${COMMUNITY_SERVER_HOST} ]]; then
+		CONTROLPANEL_ADDITIONS_PARAMS="${CONTROLPANEL_ADDITIONS_PARAMS} -e COMMUNITY_SERVER_EXTERNAL=true";
+	fi
+
+	 sudo docker run -i -t -d --restart=always --name ${CONTROLPANEL_CONTAINER_NAME} ${CONTROLPANEL_ADDITIONS_PARAMS} \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-v /app/onlyoffice/CommunityServer/data:/app/onlyoffice/CommunityServer/data \
 	-v /app/onlyoffice/DocumentServer/data:/app/onlyoffice/DocumentServer/data \
@@ -847,6 +898,14 @@ install_community_server () {
 
 	RUN_COMMAND="sudo docker run --name $COMMUNITY_CONTAINER_NAME -i -t -d --restart=always -p $COMMUNITY_PORT:80 -p 443:443 -p 5222:5222";
 
+	if [[ -n ${MAIL_SERVER_HOST} ]]; then
+		RUN_COMMAND="$RUN_COMMAND  -e MAIL_SERVER_DB_HOST='${MAIL_SERVER_HOST}'";
+	fi
+
+	if [[ -n ${DOCUMENT_SERVER_HOST} ]]; then
+		RUN_COMMAND="$RUN_COMMAND  -e DOCUMENT_SERVER_HOST='${DOCUMENT_SERVER_HOST}'";
+	fi
+	
 	if [[ -n ${DOCUMENT_SERVER_ID} ]]; then
 		RUN_COMMAND="$RUN_COMMAND  --link $DOCUMENT_CONTAINER_NAME:document_server";
 	fi
@@ -922,7 +981,9 @@ start_installation () {
 
 	check_kernel
 
-	check_ports
+	if [ "$UPDATE" != "true" ]; then
+		check_ports
+	fi
 
 	if ! command_exists docker ; then
 		install_docker;

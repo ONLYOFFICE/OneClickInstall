@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Web;
 using OneClickInstallation.Models;
 using OneClickInstallation.Resources;
@@ -65,6 +66,47 @@ namespace OneClickInstallation.Helpers
             return newFileName;
         }
 
+        public static string SaveFile(string url)
+        {
+            if (string.IsNullOrEmpty(url))
+                throw new Exception(OneClickCommonResource.ErrorFileIsNull);
+
+            var uri = new Uri(url);
+
+            var fileName = Path.GetFileName(uri.LocalPath);
+
+            if (string.IsNullOrEmpty(fileName))
+                throw new Exception(OneClickCommonResource.ErrorFileIsNull);
+
+            var folderPath = HttpContext.Current.Server.MapPath(DataFolder + TmpFolder);
+
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+            var filePath = Path.Combine(folderPath, fileName);
+
+            var index = 1;
+            var newFileName = fileName;
+
+            while (File.Exists(filePath))
+            {
+                newFileName = string.Format("{0} ({1}){2}", Path.GetFileNameWithoutExtension(fileName), index++, Path.GetExtension(fileName));
+                filePath = Path.Combine(folderPath, newFileName);
+            }
+
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(uri, filePath);
+            }
+
+            return newFileName;
+        }
+
+        public static string GetTmpFileVirtualPath(string fileName)
+        {
+            return DataFolder + TmpFolder + "/" + fileName;
+        }
+
         public static string GetFile(string fileName)
         {
             var filePath = Path.Combine(HttpContext.Current.Server.MapPath(DataFolder + TmpFolder), fileName);
@@ -72,6 +114,14 @@ namespace OneClickInstallation.Helpers
             if (File.Exists(filePath)) return filePath;
 
             throw new Exception(OneClickCommonResource.ErrorFileNotFound);
+        }
+
+        public static void RemoveFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new Exception(OneClickCommonResource.ErrorFileNotFound);
+
+            File.Delete(filePath);
         }
 
         public static void CreateLogFile(string userId, InstallationProgressModel progressModel)

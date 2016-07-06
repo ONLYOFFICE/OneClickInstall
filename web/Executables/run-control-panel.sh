@@ -12,8 +12,8 @@
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
 UPDATE=0
-DOCUMENT_IMAGE_NAME='onlyoffice/documentserver';
-DOCUMENT_CONTAINER_NAME='onlyoffice-document-server';
+CONTROLPANEL_IMAGE_NAME='onlyoffice/controlpanel';
+CONTROLPANEL_CONTAINER_NAME='onlyoffice-control-panel';
 
 while [ "$1" != "" ]; do
 	case $1 in
@@ -24,7 +24,7 @@ while [ "$1" != "" ]; do
 
 		-i | --image )
 			if [ "$2" != "" ]; then
-				DOCUMENT_IMAGE_NAME=$2
+				CONTROLPANEL_IMAGE_NAME=$2
 				shift
 			fi
 		;;
@@ -38,7 +38,7 @@ while [ "$1" != "" ]; do
 
 		-c | --container )
 			if [ "$2" != "" ]; then
-				DOCUMENT_CONTAINER_NAME=$2
+				CONTROLPANEL_CONTAINER_NAME=$2
 				shift
 			fi
 		;;
@@ -66,7 +66,7 @@ while [ "$1" != "" ]; do
 			echo "      -c, --container          container name"
 			echo "      -p, --password          dockerhub password"
 			echo "      -un, --username          dockerhub username"
-			echo "      -?, -h, --help        this help"
+			echo "      -?, -h, --help          this help"
 			echo
 			exit 0
 		;;
@@ -81,15 +81,15 @@ done
 
 
 
-DOCUMENT_SERVER_ID=$(sudo docker inspect --format='{{.Id}}' ${DOCUMENT_CONTAINER_NAME});
+CONTROL_PANEL_ID=$(sudo docker inspect --format='{{.Id}}' ${CONTROLPANEL_CONTAINER_NAME});
 
-if [[ -n ${DOCUMENT_SERVER_ID} ]]; then
+if [[ -n ${CONTROL_PANEL_ID} ]]; then
 	if [ "$UPDATE" == "1" ]; then
-	    sudo bash /app/onlyoffice/setup/tools/check-bindings.sh ${DOCUMENT_SERVER_ID} "/etc/onlyoffice,/var/lib/onlyoffice"
-		sudo bash /app/onlyoffice/setup/tools/remove-container.sh ${DOCUMENT_CONTAINER_NAME}
+	    sudo bash /app/onlyoffice/setup/tools/check-bindings.sh ${CONTROL_PANEL_ID}
+		sudo bash /app/onlyoffice/setup/tools/remove-container.sh ${CONTROLPANEL_CONTAINER_NAME}
 	else
-		echo "ONLYOFFICE DOCUMENT SERVER is already installed."
-		sudo docker start ${DOCUMENT_SERVER_ID};
+		echo "ONLYOFFICE CONTROL PANEL is already installed."
+		sudo docker start ${CONTROL_PANEL_ID};
 		echo "INSTALLATION-STOP-SUCCESS"
 		exit 0;
 	fi
@@ -100,7 +100,7 @@ if [[ -n ${USERNAME} && -n ${PASSWORD}  ]]; then
 fi
 
 if [[ -z ${VERSION} ]]; then
-	GET_VERSION_COMMAND="sudo bash /app/onlyoffice/setup/tools/get-available-version.sh -i $DOCUMENT_IMAGE_NAME";
+	GET_VERSION_COMMAND="sudo bash /app/onlyoffice/setup/tools/get-available-version.sh -i $CONTROLPANEL_IMAGE_NAME";
 
 	if [[ -n ${PASSWORD} && -n ${USERNAME} ]]; then
 	    GET_VERSION_COMMAND="$GET_VERSION_COMMAND -un $USERNAME -p $PASSWORD";
@@ -109,20 +109,25 @@ if [[ -z ${VERSION} ]]; then
 	VERSION=$(${GET_VERSION_COMMAND});
 fi
 
-sudo bash /app/onlyoffice/setup/tools/pull-image.sh ${DOCUMENT_IMAGE_NAME} ${VERSION}
+sudo bash /app/onlyoffice/setup/tools/pull-image.sh ${CONTROLPANEL_IMAGE_NAME} ${VERSION}
 
-sudo docker run --net onlyoffice -i -t -d --restart=always --name ${DOCUMENT_CONTAINER_NAME} \
--v /app/onlyoffice/DocumentServer/data:/var/www/onlyoffice/Data \
--v /app/onlyoffice/DocumentServer/logs:/var/log/onlyoffice \
-${DOCUMENT_IMAGE_NAME}:${VERSION}
+sudo docker run --net onlyoffice -i -t -d --restart=always --name ${CONTROLPANEL_CONTAINER_NAME} \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /app/onlyoffice/CommunityServer/data:/app/onlyoffice/CommunityServer/data \
+-v /app/onlyoffice/DocumentServer/data:/app/onlyoffice/DocumentServer/data \
+-v /app/onlyoffice/MailServer/data:/app/onlyoffice/MailServer/data \
+-v /app/onlyoffice/ControlPanel/data:/var/www/onlyoffice-controlpanel/Data \
+-v /app/onlyoffice/ControlPanel/logs:/var/log/onlyoffice-controlpanel \
+-v /app/onlyoffice/ControlPanel/mysql:/var/lib/mysql \
+${CONTROLPANEL_IMAGE_NAME}:${VERSION}
 
-DOCUMENT_SERVER_ID=$(sudo docker inspect --format='{{.Id}}' ${DOCUMENT_CONTAINER_NAME});
+CONTROL_PANEL_ID=$(sudo docker inspect --format='{{.Id}}' ${CONTROLPANEL_CONTAINER_NAME});
 
-if [[ -z ${DOCUMENT_SERVER_ID} ]]; then
-	echo "ONLYOFFICE DOCUMENT SERVER not installed."
+if [[ -z ${CONTROL_PANEL_ID} ]]; then
+	echo "ONLYOFFICE CONTROL PANEL not installed."
 	echo "INSTALLATION-STOP-ERROR"
 	exit 0;
 fi
 
-echo "ONLYOFFICE DOCUMENT SERVER successfully installed."
+echo "ONLYOFFICE CONTROL PANEL successfully installed."
 echo "INSTALLATION-STOP-SUCCESS"

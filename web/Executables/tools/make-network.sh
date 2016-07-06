@@ -11,19 +11,10 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-STR_PORTS=${1}
-ARRAY_PORTS=(${STR_PORTS//,/ })
+EXIST=$(sudo docker network ls | awk '{print $2;}' | grep -x onlyoffice);
 
-for PORT in "${ARRAY_PORTS[@]}"
-do
-	REGEXP=":$PORT$"
-	CHECK_RESULT=$(sudo netstat -lnp | awk '{print $4}' | grep $REGEXP)
-
-	if [[ $CHECK_RESULT != "" ]]; then
-		echo "The following ports must be open: $PORT"
-		echo "INSTALLATION-STOP-ERROR[3]"
-		exit 0;
-	fi
-done
+if [[ -z $EXIST ]]; then
+	sudo docker network create --driver bridge onlyoffice
+fi
 
 echo "INSTALLATION-STOP-SUCCESS"

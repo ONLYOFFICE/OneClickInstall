@@ -106,6 +106,24 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company name.
+        /// </summary>
+        public static string CompanyNamePlaceholder {
+            get {
+                return ResourceManager.GetString("CompanyNamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Company size.
+        /// </summary>
+        public static string CompanySizePlaceholder {
+            get {
+                return ResourceManager.GetString("CompanySizePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connection error.
         /// </summary>
         public static string ConnectionErrorHdr {
@@ -124,7 +142,7 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Check connection setting and try again..
+        ///   Looks up a localized string similar to Check the connection settings and make sure that the remote server allows SSH authentication..
         /// </summary>
         public static string ConnectionErrorText_2 {
             get {
@@ -169,11 +187,20 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An ONLYOFFICE Installer used to automate the deployement process of ONLYOFFICE Free Edition using the Docker container technology.  ONLYOFFICE Free Edition is an open source software that comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams..
+        ///   Looks up a localized string similar to An ONLYOFFICE Installer used to automate the deployment process of ONLYOFFICE Community Edition using the Docker container technology. ONLYOFFICE Community Edition comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams..
         /// </summary>
-        public static string ConnectionSettingsFormDescText {
+        public static string ConnectionSettingsFormDescText_Community {
             get {
-                return ResourceManager.GetString("ConnectionSettingsFormDescText", resourceCulture);
+                return ResourceManager.GetString("ConnectionSettingsFormDescText_Community", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An ONLYOFFICE Installer used to automate the deployment process of ONLYOFFICE Enterprise Edition using the Docker container technology. ONLYOFFICE Enterprise Edition comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams. ONLYOFFICE Control Panel included into this installation will help you to configure the corporate web-office quickly and easily..
+        /// </summary>
+        public static string ConnectionSettingsFormDescText_Enterprise {
+            get {
+                return ResourceManager.GetString("ConnectionSettingsFormDescText_Enterprise", resourceCulture);
             }
         }
         
@@ -214,74 +241,29 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Audit Trail.
+        ///   Looks up a localized string similar to Control Panel.
         /// </summary>
-        public static string ContrrolPanelFeatureAudit {
+        public static string ControlPanel {
             get {
-                return ResourceManager.GetString("ContrrolPanelFeatureAudit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Backup.
-        /// </summary>
-        public static string ContrrolPanelFeatureBackup {
-            get {
-                return ResourceManager.GetString("ContrrolPanelFeatureBackup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to HTTPS.
-        /// </summary>
-        public static string ContrrolPanelFeatureHttps {
-            get {
-                return ResourceManager.GetString("ContrrolPanelFeatureHttps", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Update.
-        /// </summary>
-        public static string ContrrolPanelFeatureUpdate {
-            get {
-                return ResourceManager.GetString("ContrrolPanelFeatureUpdate", resourceCulture);
+                return ResourceManager.GetString("ControlPanel", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Control Panel.
         /// </summary>
-        public static string ContrrolPanelHdr {
+        public static string ControlPanelHdr {
             get {
-                return ResourceManager.GetString("ContrrolPanelHdr", resourceCulture);
+                return ResourceManager.GetString("ControlPanelHdr", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ONLYOFFICE Control Panel is a new way to manage and configure your server in one click. It offers features like ....
+        ///   Looks up a localized string similar to ONLYOFFICE Control Panel is a set of automation tools designed to simplify the web-office settings management, such as HTTPS, Updates, Rebranding, LDAP, Data Backup and Restore, Health Check, Login History and Audit Trail..
         /// </summary>
-        public static string ContrrolPanelText {
+        public static string ControlPanelText_Enterprise {
             get {
-                return ResourceManager.GetString("ContrrolPanelText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Customize settings*.
-        /// </summary>
-        public static string CustomStepText {
-            get {
-                return ResourceManager.GetString("CustomStepText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * Advanced configuration settings provided on commercial basis.
-        /// </summary>
-        public static string CustomStepTitleText {
-            get {
-                return ResourceManager.GetString("CustomStepTitleText", resourceCulture);
+                return ResourceManager.GetString("ControlPanelText_Enterprise", resourceCulture);
             }
         }
         
@@ -313,11 +295,29 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter your email.
+        ///   Looks up a localized string similar to Email.
         /// </summary>
         public static string EmailPlaceholder {
             get {
                 return ResourceManager.GetString("EmailPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} employees.
+        /// </summary>
+        public static string EmployeesCount {
+            get {
+                return ResourceManager.GetString("EmployeesCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to More than {0} employees.
+        /// </summary>
+        public static string EmployeesMoreThanCount {
+            get {
+                return ResourceManager.GetString("EmployeesMoreThanCount", resourceCulture);
             }
         }
         
@@ -336,6 +336,24 @@ namespace OneClickInstallation.Resources {
         public static string ExistVersionErrorText {
             get {
                 return ResourceManager.GetString("ExistVersionErrorText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAQ.
+        /// </summary>
+        public static string FAQ {
+            get {
+                return ResourceManager.GetString("FAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get trial License File.
+        /// </summary>
+        public static string GetLicenseFile {
+            get {
+                return ResourceManager.GetString("GetLicenseFile", resourceCulture);
             }
         }
         
@@ -457,6 +475,15 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installing Control Panel.
+        /// </summary>
+        public static string InstallationProgressStep_InstallControlPanel {
+            get {
+                return ResourceManager.GetString("InstallationProgressStep_InstallControlPanel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Installing Docker service.
         /// </summary>
         public static string InstallationProgressStep_InstallDocker {
@@ -480,15 +507,6 @@ namespace OneClickInstallation.Resources {
         public static string InstallationProgressStep_InstallMailServer {
             get {
                 return ResourceManager.GetString("InstallationProgressStep_InstallMailServer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Rebooting the server.
-        /// </summary>
-        public static string InstallationProgressStep_RebootServer {
-            get {
-                return ResourceManager.GetString("InstallationProgressStep_RebootServer", resourceCulture);
             }
         }
         
@@ -534,6 +552,33 @@ namespace OneClickInstallation.Resources {
         public static string IPAddressPlaceholder {
             get {
                 return ResourceManager.GetString("IPAddressPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Learn more.
+        /// </summary>
+        public static string LearnMore {
+            get {
+                return ResourceManager.GetString("LearnMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License File.
+        /// </summary>
+        public static string LicenseFile {
+            get {
+                return ResourceManager.GetString("LicenseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload License File.
+        /// </summary>
+        public static string LicensePlaceholder {
+            get {
+                return ResourceManager.GetString("LicensePlaceholder", resourceCulture);
             }
         }
         
@@ -601,6 +646,15 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string NamePlaceholder {
+            get {
+                return ResourceManager.GetString("NamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CoreOS 647.0.0 (stable).
         /// </summary>
         public static string OperatingSystemCoreOS {
@@ -619,7 +673,7 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to any other distributive with kernel version 3.19.
+        ///   Looks up a localized string similar to any other distributive with kernel version 3.10 or later.
         /// </summary>
         public static string OperatingSystemOther {
             get {
@@ -655,6 +709,33 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Phone.
+        /// </summary>
+        public static string PhonePlaceholder {
+            get {
+                return ResourceManager.GetString("PhonePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        public static string PositionPlaceholder {
+            get {
+                return ResourceManager.GetString("PositionPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request form.
+        /// </summary>
+        public static string RequestForm {
+            get {
+                return ResourceManager.GetString("RequestForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Minimum server requirements:.
         /// </summary>
         public static string ServerRequirements {
@@ -664,7 +745,7 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Congratulations, the installation process is successfully completed!.
+        ///   Looks up a localized string similar to Congratulations! You have successfully installed ONLYOFFICE!.
         /// </summary>
         public static string ServerSettingsFormDescHdr {
             get {
@@ -673,20 +754,20 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Control Panel.
+        ///   Looks up a localized string similar to Your corporate web-office is ready..
         /// </summary>
-        public static string ServerSettingsFormHdr {
+        public static string ServerSettingsFormDescText_1 {
             get {
-                return ResourceManager.GetString("ServerSettingsFormHdr", resourceCulture);
+                return ResourceManager.GetString("ServerSettingsFormDescText_1", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Control Panel is in beta stage and will be available soon. Enter your email below to be the first to learn about the release..
+        ///   Looks up a localized string similar to To start working right now, click the Open Your Web-Office button..
         /// </summary>
-        public static string ServerSettingsFormText {
+        public static string ServerSettingsFormDescText_2 {
             get {
-                return ResourceManager.GetString("ServerSettingsFormText", resourceCulture);
+                return ResourceManager.GetString("ServerSettingsFormDescText_2", resourceCulture);
             }
         }
         
@@ -736,24 +817,6 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Community and Document Server will be installed by default. Select Mail Server if you need it..
-        /// </summary>
-        public static string SetupFormText {
-            get {
-                return ResourceManager.GetString("SetupFormText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to We recommended that you install Mail Server together with other components. In case you decide to install it later you will need to remove all previously installed ONLYOFFICE components for successful installation..
-        /// </summary>
-        public static string SetupMailServerDesc {
-            get {
-                return ResourceManager.GetString("SetupMailServerDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Software requirements.
         /// </summary>
         public static string SoftwareRequirements {
@@ -799,11 +862,20 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You need to manually remove previously installed ONLYOFFICE components before you can continue installation..
+        ///   Looks up a localized string similar to After the correct filling in of the request we automatically generate the license file for the trial version, which will be available to you within 30 days..
         /// </summary>
-        public static string UpdadeSetupOptionsDesc {
+        public static string TrialDescText {
             get {
-                return ResourceManager.GetString("UpdadeSetupOptionsDesc", resourceCulture);
+                return ResourceManager.GetString("TrialDescText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your license file has been successfully created and will be automatically inserted in the field..
+        /// </summary>
+        public static string TrialReadyText {
+            get {
+                return ResourceManager.GetString("TrialReadyText", resourceCulture);
             }
         }
         
@@ -813,6 +885,15 @@ namespace OneClickInstallation.Resources {
         public static string UserNamePlaceholder {
             get {
                 return ResourceManager.GetString("UserNamePlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start using.
+        /// </summary>
+        public static string UsingStepText {
+            get {
+                return ResourceManager.GetString("UsingStepText", resourceCulture);
             }
         }
     }

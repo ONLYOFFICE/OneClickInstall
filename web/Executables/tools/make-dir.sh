@@ -11,24 +11,26 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-SERVER_DIR=${1};
+sudo mkdir -p "/app/onlyoffice/setup";
 
-sudo mkdir -p "${SERVER_DIR}/setup";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/data";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/logs/documentserver/FileConverterService";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/logs/documentserver/CoAuthoringService";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/logs/documentserver/DocService";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/logs/documentserver/SpellCheckerService";
+sudo mkdir -p "/app/onlyoffice/DocumentServer/logs/documentserver/LibreOfficeService";
 
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/data";
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/logs/documentserver/FileConverterService";
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/logs/documentserver/CoAuthoringService";
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/logs/documentserver/DocService";
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/logs/documentserver/SpellCheckerService";
-sudo mkdir -p "${SERVER_DIR}/DocumentServer/logs/documentserver/LibreOfficeService";
+sudo mkdir -p "/app/onlyoffice/MailServer/data/certs";
+sudo mkdir -p "/app/onlyoffice/MailServer/logs";
+sudo mkdir -p "/app/onlyoffice/MailServer/mysql";
 
-sudo mkdir -p "${SERVER_DIR}/MailServer/data/certs";
-sudo mkdir -p "${SERVER_DIR}/MailServer/logs";
-sudo mkdir -p "${SERVER_DIR}/MailServer/mysql";
+sudo mkdir -p "/app/onlyoffice/CommunityServer/data";
+sudo mkdir -p "/app/onlyoffice/CommunityServer/logs";
+sudo mkdir -p "/app/onlyoffice/CommunityServer/mysql";
 
-sudo mkdir -p "${SERVER_DIR}/CommunityServer/data";
-sudo mkdir -p "${SERVER_DIR}/CommunityServer/logs";
-sudo mkdir -p "${SERVER_DIR}/CommunityServer/mysql";
+sudo mkdir -p "/app/onlyoffice/ControlPanel/data";
+sudo mkdir -p "/app/onlyoffice/ControlPanel/logs";
+sudo mkdir -p "/app/onlyoffice/ControlPanel/mysql";
 
 sudo chmod 777 /app -R
 

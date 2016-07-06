@@ -121,6 +121,11 @@ input[type="password"]
         {
             background-position: -82px -135px;
         }
+
+        .label
+        {
+            color: #999999;
+        }
     }
 
     &.checked
@@ -160,6 +165,11 @@ input[type="password"]
     &.disabled
     {
         cursor: default;
+
+        .label
+        {
+            color: #999999;
+        }
     }
 
     &.checked
@@ -185,6 +195,101 @@ input[type="password"]
             font-size: 10px;
             margin-left: 8px;
             padding: 0 8px 1px;
+        }
+    }
+}
+
+.custom-select {
+    border-color: #c1c1c1;
+    border-width: 1px;
+    border-style: solid;
+    display: block;
+    margin: 0;
+    padding: 10px 14px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 16px;
+    cursor: pointer;
+
+    &.error {
+        border-color: #bf3703;
+    }
+
+    &.disabled {
+        background-color: #f4f4f4;
+    }
+
+    &.single
+    {
+        .borderRadius(3px);
+    }
+
+    &.group-top
+    {
+        border-bottom-color: #f3f3f3;
+        .borderTopRadius(3px);
+    }
+
+    &.group-center
+    {
+        border-top-color: #f3f3f3;
+        border-bottom-color: #f3f3f3;
+    }
+
+    &.group-bottom
+    {
+        border-top-color: #f3f3f3;
+        .borderBottomRadius(3px);
+    }
+
+    .custom-select-value {
+        border: medium none;
+        height: 22px;
+        width: 90%;
+        padding: 0;
+    }
+
+    .custom-select-switch {
+        float: right;
+        width: 0;
+        height: 0;
+        margin-top: 11px;
+        border-style: solid;
+        border-width: 4px 4px 0 4px;
+        border-color: #4c4c4c transparent transparent transparent;
+    }
+
+    .custom-select-options {
+        display: none;
+        position: absolute;
+        padding: 5px;
+        background-color: white;
+        border: 1px solid #c1c1c1;
+        .borderRadius(2px);
+        .boxShadow(1px, 1px, 8px, rgba(0,0,0,.2));
+        z-index: 1000;
+
+        .custom-select-options-inner {
+            max-height: 200px;
+            padding-right: 20px;
+            overflow-y: auto;
+            
+            .custom-select-option {
+                display: block;
+                text-decoration: none;
+                padding: 2px 14px 2px 4px;
+                min-width: 50px;
+                color: #666666;
+
+                &:hover {
+                    background-color: #e9e9e9;
+                    cursor: pointer;
+                }
+
+                &.selected {
+                    color: #2e94c9;
+                }
+            }
         }
     }
 }

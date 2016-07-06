@@ -19,6 +19,7 @@
 
 using System;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -45,8 +46,8 @@ namespace OneClickInstallation
         {
             if (!Settings.ResourcesFromDataBase) return;
 
-            AssemblyWork.UploadResourceData(AppDomain.CurrentDomain.GetAssemblies());
-            AppDomain.CurrentDomain.AssemblyLoad += (s, a) => AssemblyWork.UploadResourceData(AppDomain.CurrentDomain.GetAssemblies());
+            DBResourceManager.PatchAssemblies();
+            DBResourceManager.PatchAssembly(Assembly.GetExecutingAssembly(), false);
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

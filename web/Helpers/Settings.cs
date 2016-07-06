@@ -17,11 +17,8 @@
  *
 */
 
-using System;
 using System.ComponentModel;
 using System.Web.Configuration;
-using OneClickInstallation.Classes;
-using log4net;
 
 namespace OneClickInstallation.Helpers
 {
@@ -39,6 +36,7 @@ namespace OneClickInstallation.Helpers
             }
         }
         
+
         public static string Languages
         {
             get { return GetAppSettings("languages", "en,de,fr,es,ru,lv,it"); }
@@ -53,6 +51,7 @@ namespace OneClickInstallation.Helpers
         {
             get { return GetAppSettings("maxFileSize", 1048576); }
         }
+        
 
         public static string AnalyticsFileUrl
         {
@@ -64,48 +63,125 @@ namespace OneClickInstallation.Helpers
             get { return GetAppSettings("termsFileUrl", string.Empty); }
         }
 
-        public static string SupportEmail
-        {
-            get { return GetAppSettings("supportEmail", string.Empty); }
-        }
-
         public static string SourceUrl
         {
             get { return GetAppSettings("sourceUrl", string.Empty); }
         }
 
-        public static EmailSender EmailSender
+        public static string DevUrl
         {
-            get
-            {
-                try
-                {
-                    var settings = GetAppSettings("emailSender", string.Empty).Split('|');
-
-                    return new EmailSender
-                        {
-                            Host = settings[0],
-                            Port = Convert.ToInt32(settings[1]),
-                            Email = settings[2],
-                            Password = settings[3],
-                            EnableSsl = Convert.ToBoolean(settings[4])
-                        };
-                }
-                catch (Exception ex)
-                {
-                    LogManager.GetLogger("ASC").Error(ex.Message, ex);
-
-                    return null;
-                }
-            }
+            get { return GetAppSettings("devUrl", string.Empty); }
         }
+
+        public static string HelpUrl
+        {
+            get { return GetAppSettings("helpUrl", string.Empty); }
+        }
+
+        public static string LicenseUrl
+        {
+            get { return GetAppSettings("licenseUrl", string.Empty); }
+        }
+
+
+        public static string DockerCommunityContainerName
+        {
+            get { return GetAppSettings("docker.community-container-name", "onlyoffice-community-server"); }
+        }
+
+        public static string DockerDocumentContainerName
+        {
+            get { return GetAppSettings("docker.document-container-name", "onlyoffice-document-server"); }
+        }
+
+        public static string DockerMailContainerName
+        {
+            get { return GetAppSettings("docker.mail-container-name", "onlyoffice-mail-server"); }
+        }
+
+        public static string DockerControlPanelContainerName
+        {
+            get { return GetAppSettings("docker.controlpanel-container-name", "onlyoffice-control-panel"); }
+        }
+
+
+        public static string DockerCommunityImageName
+        {
+            get { return GetAppSettings("docker.community-image-name", "onlyoffice/communityserver"); }
+        }
+
+        public static string DockerDocumentImageName
+        {
+            get { return GetAppSettings("docker.document-image-name", "onlyoffice/documentserver"); }
+        }
+
+        public static string DockerMailImageName
+        {
+            get { return GetAppSettings("docker.mail-image-name", "onlyoffice/mailserver"); }
+        }
+
+        public static string DockerControlPanelImageName
+        {
+            get { return GetAppSettings("docker.controlpanel-image-name", "onlyoffice/controlpanel"); }
+        }
+
+
+        public static string DockerEnterpriseCommunityImageName
+        {
+            get { return GetAppSettings("docker.enterprise.community-image-name", "onlyoffice4enterprise/communityserver-ee"); }
+        }
+
+        public static string DockerEnterpriseDocumentImageName
+        {
+            get { return GetAppSettings("docker.enterprise.document-image-name", "onlyoffice4enterprise/documentserver-ee"); }
+        }
+
+        public static string DockerEnterpriseMailImageName
+        {
+            get { return GetAppSettings("docker.enterprise.mail-image-name", "onlyoffice/mailserver"); }
+        }
+
+        public static string DockerEnterpriseControlPanelImageName
+        {
+            get { return GetAppSettings("docker.enterprise.controlpanel-image-name", "onlyoffice4enterprise/controlpanel-ee"); }
+        }
+
+
+        public static string DockerHubLoginUrl
+        {
+            get { return GetAppSettings("dockerhub.loginUrl", "https://hub.docker.com/v2/users/login/"); }
+        }
+
+        public static string DockerHubTagsUrlFormat
+        {
+            get { return GetAppSettings("dockerhub.tagsUrlFormat", "https://hub.docker.com/v2/repositories/{0}/tags/"); }
+        }
+
+        public static string DockerHubUserName
+        {
+            get { return GetAppSettings("dockerhub.userName", string.Empty); }
+        }
+
+        public static string DockerHubPassword
+        {
+            get { return GetAppSettings("dockerhub.password", string.Empty); }
+        }
+
+
+        public static string CacheKey
+        {
+            get { return GetAppSettings("cacheKey", string.Empty); }
+        }
+
 
         public const string RemoteServerDir = "/app/onlyoffice";
 
+        public const string TrialFileName = "trial.lic";
+
         public const string InstallationStopPattern = "INSTALLATION-STOP";
-        public const string InstallationRebootPattern = "INSTALLATION-STOP-REBOOT";
         public const string InstallationSuccessPattern = "INSTALLATION-STOP-SUCCESS";
         public const string InstallationErrorPattern = "INSTALLATION-STOP-ERROR";
+
 
         private static T GetAppSettings<T>(string key, T defaultValue)
         {

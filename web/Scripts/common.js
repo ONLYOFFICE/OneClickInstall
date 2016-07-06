@@ -156,8 +156,8 @@ var Common = (function () {
 
         return {
             show: function (popupId, width, height, marginLeft, marginTop) {
-                width = width || 362;
-                height = height || 325;
+                width = width || 460;
+                height = height || 300;
                 marginLeft = marginLeft || 0;
                 marginTop = marginTop || 0;
 
@@ -171,7 +171,79 @@ var Common = (function () {
         };
     }();
 
-    var getKeyCode = function(event) {
+    var selectorListener = function () {
+
+        var $selectors = $('.custom-select');
+
+        var init = function () {
+            $selectors.on('click', showSelectOptions);
+            $selectors.on('click', '.custom-select-option', selectOption);
+
+            $selectors.on('focus', '.custom-select-value', function () { this.blur(); });
+
+            $("body").on("click", function (event) {
+                var target = (event.target) ? event.target : event.srcElement,
+                    element = $(target);
+
+                if (!element.is('.custom-select') && !element.is('.custom-select-value') && !element.is('.custom-select-switch')) {
+                    $selectors.find('.custom-select-options').hide();
+                } else {
+                    var curBox = element.is('.custom-select') ? element : element.parents('.custom-select:first');
+                    $selectors.not(curBox).find('.custom-select-options').hide();
+                }
+            });
+        };
+
+        function showSelectOptions() {
+            var $selector = $(this);
+            var $options = $selector.find('.custom-select-options');
+
+            if ($options.is(':visible')) {
+                $options.hide();
+                $options.css('top', 0);
+                $options.css('left', 0);
+            } else {
+                var offset = $selector.position();
+
+                if ($options.is('.top')) {
+                    $options.css('top', offset.top - $options.outerHeight() - 3 + 'px');
+                    $options.css('left', offset.left + $selector.outerWidth() - $options.outerWidth() + 'px');
+                } else {
+                    $options.css('top', offset.top + $selector.outerHeight() + 3 + 'px');
+                    $options.css('left', offset.left + $selector.outerWidth() - $options.outerWidth() + 'px');
+                }
+
+                $options.show();
+            }
+        }
+
+        function selectOption() {
+            var $option = $(this);
+            var $select = $option.closest('.custom-select');
+
+            $select.find('.custom-select-value').val($option.text());
+            $select.attr('data-value', $option.attr('data-value'));
+
+            $option.closest('.custom-select-options').hide();
+            $option.siblings('.custom-select-option').removeClass('selected');
+            $option.addClass('selected');
+        }
+
+        var set = function (select, value) {
+            if (!select.is(".custom-select")) {
+                return;
+            }
+
+            select.find(".custom-select-option[data-value=\"" + value + "\"]").click();
+        };
+
+        return {
+            init: init,
+            set: set,
+        };
+    }();
+
+    var getKeyCode = function (event) {
         var code = null;
 
         if (event.keyCode)
@@ -182,10 +254,28 @@ var Common = (function () {
         return code;
     };
 
+    var getUrlParam = function (paramName) {
+        var urlParams = {};
+
+        if (location.search) {
+            var queryParts = location.search.substring(1).split("&");
+
+            for (var i = 0; i < queryParts.length; i++) {
+                var keyValuePair = queryParts[i].split("=");
+                if (!keyValuePair[0]) continue;
+                urlParams[keyValuePair[0]] = keyValuePair[1];
+            }
+        }
+
+        return urlParams.hasOwnProperty(paramName) ? urlParams[paramName] : null;
+    };
+
     return {
         loader: loader,
         blockUI: blockUI,
-        getKeyCode: getKeyCode
+        selectorListener: selectorListener,
+        getKeyCode: getKeyCode,
+        getUrlParam: getUrlParam
     };
     
 })($);

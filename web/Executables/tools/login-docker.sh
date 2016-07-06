@@ -11,19 +11,9 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-STR_PORTS=${1}
-ARRAY_PORTS=(${STR_PORTS//,/ })
+USERNAME=$1;
+PASSWORD=$2;
 
-for PORT in "${ARRAY_PORTS[@]}"
-do
-	REGEXP=":$PORT$"
-	CHECK_RESULT=$(sudo netstat -lnp | awk '{print $4}' | grep $REGEXP)
-
-	if [[ $CHECK_RESULT != "" ]]; then
-		echo "The following ports must be open: $PORT"
-		echo "INSTALLATION-STOP-ERROR[3]"
-		exit 0;
-	fi
-done
-
-echo "INSTALLATION-STOP-SUCCESS"
+if [[ -n ${USERNAME} && -n ${PASSWORD}  ]]; then
+	sudo docker login -u ${USERNAME} -p ${PASSWORD}
+fi

@@ -9,45 +9,58 @@
 
         <p class="label">@OneClickHomePageResource.ConnectionSettingsFormText</p>
 
-        <div id="connectionFieldsForm">
+        <div class="bottom-indent">
+            <input id="host" type="text" class="group-top" placeholder="@OneClickHomePageResource.IPAddressPlaceholder" />
+            <input id="userName" type="text" class="group-bottom" placeholder="@OneClickHomePageResource.UserNamePlaceholder" />
+        </div>
 
-            <div class="bottom-indent">
-                <input id="host" type="text" class="group-top" placeholder="@OneClickHomePageResource.IPAddressPlaceholder" />
-                <input id="userName" type="text" class="group-bottom" placeholder="@OneClickHomePageResource.UserNamePlaceholder" />
+        <div class="bottom-indent-small">
+            <div id="keyType" class="custom-radio checked" data-name="authType">
+                <div class="icon"></div>
+                <span class="label">@OneClickHomePageResource.SSHKey</span>
             </div>
-
-            <div class="bottom-indent">
-                <div id="keyType" class="custom-radio checked" data-name="authType">
-                    <div class="icon"></div>
-                    <span class="label">@OneClickHomePageResource.SSHKey</span>
-                </div>
-                <div id="passwordType" class="custom-radio" data-name="authType">
-                    <div class="icon"></div>
-                    <span class="label">@OneClickHomePageResource.Password</span>
-                </div>
+            <div id="passwordType" class="custom-radio" data-name="authType">
+                <div class="icon"></div>
+                <span class="label">@OneClickHomePageResource.Password</span>
             </div>
+        </div>
 
-            <div class="bottom-indent position-relative">
-                <input id="sshKey" type="text" class="single" readonly="readonly" placeholder="@OneClickHomePageResource.SSHKeyPlaceholder" style="padding-right: 64px;"/>
+        <div class="bottom-indent position-relative">
+            <input id="sshKey" type="text" class="single" readonly="readonly" placeholder="@OneClickHomePageResource.SSHKeyPlaceholder" style="padding-right: 64px;"/>
+            <div class="upload-container">
+                <input type="file" name="file" id="sshFile">
+                <a class="button black">+</a>
+            </div>
+        </div>
+
+        <div class="bottom-indent display-none">
+            <input id="password" type="password" class="single" placeholder="@OneClickHomePageResource.PasswordPlaceholder" />
+        </div>
+
+        @if (ViewBag.Enterprise)
+        {
+            <div class="bottom-indent-small semibold">@OneClickHomePageResource.LicenseFile</div>
+
+            <div class="bottom-indent-small position-relative">
+                <input id="licenseKey" type="text" class="single" readonly="readonly" placeholder="@OneClickHomePageResource.LicensePlaceholder" style="padding-right: 64px;"/>
                 <div class="upload-container">
-                    <input type="file" name="file" id="sshFile">
+                    <input type="file" name="file" id="licenseFile">
                     <a class="button black">+</a>
                 </div>
             </div>
 
-            <div class="bottom-indent display-none">
-                <input id="password" type="password" class="single" placeholder="@OneClickHomePageResource.PasswordPlaceholder" />
-            </div>
-
             <div class="bottom-indent">
-                <a id="connectBtn" class="button green disabled">@OneClickCommonResource.Connect</a>
+                <a id="showTrialPop" class="blue underline label">@OneClickHomePageResource.GetLicenseFile</a>
             </div>
-            
-            <div id="termsBlock" class="bottom-indent gray describe">
-                @OneClickHomePageResource.AcceptTermsText<br />
-                <a class="blue underline" href="@Settings.TermsFileUrl" target="_blank">@OneClickHomePageResource.AcceptTermsLinkText</a>
-            </div>
+        }
 
+        <div class="bottom-indent">
+            <a id="connectBtn" class="button green disabled">@OneClickCommonResource.Connect</a>
+        </div>
+
+        <div id="termsBlock" class="bottom-indent gray describe">
+            @OneClickHomePageResource.AcceptTermsText<br />
+            <a class="blue underline" href="@Settings.TermsFileUrl" target="_blank">@OneClickHomePageResource.AcceptTermsLinkText</a>
         </div>
 
     </div>
@@ -68,24 +81,22 @@
 
     <h2 class="blue">@OneClickHomePageResource.SetupFormHdr</h2>
 
-    <p id="setupInfoText" class="label">@OneClickHomePageResource.SetupFormText</p>
-
     <div class="bottom-indent">
-        <div id="installCommunityServerCbx" class="custom-checkbox checked disabled">
+        <div id="installCommunityServerCbx" class="custom-checkbox">
             <div class="icon"></div>
             <span class="label">@OneClickHomePageResource.CommunityServer</span>
         </div>
     </div>
 
     <div class="bottom-indent">
-        <div id="installDocumentServerCbx" class="custom-checkbox checked disabled">
+        <div id="installDocumentServerCbx" class="custom-checkbox">
             <div class="icon"></div>
             <span class="label">@OneClickHomePageResource.DocumentServer</span>
         </div>
     </div>
 
     <div class="bottom-indent">
-        <div id="installMailServerCbx" class="custom-checkbox checked">
+        <div id="installMailServerCbx" class="custom-checkbox">
             <div class="icon"></div>
             <span class="label">@OneClickHomePageResource.MailServer</span>
         </div>
@@ -94,34 +105,23 @@
     <div class="bottom-indent">
         <input id="mailDomain" type="text" class="single" placeholder="@OneClickHomePageResource.MailDomainPlaceholder" />
     </div>
-
-    <p id="mailServerSetupDesc" class="label display-none">@OneClickHomePageResource.SetupMailServerDesc</p>
-
-    <p id="updadeSetupOptionsDesc" class="label display-none">@OneClickHomePageResource.UpdadeSetupOptionsDesc</p>
+    
+    @if (ViewBag.Enterprise)
+    {
+        <div class="bottom-indent" style="margin-top: 42px;">
+            <div id="installControlPanelCbx" class="custom-checkbox">
+                <div class="icon"></div>
+                <span class="label">@OneClickHomePageResource.ControlPanel</span>
+            </div>
+        </div>
+    }
 
     <div class="bottom-indent">
-        <a id="installbtn" class="button green disabled">@OneClickCommonResource.Install</a>
-        <a id="disconnectBtn1" class="button green disabled display-none">@OneClickCommonResource.Disconnect</a>
+        <a id="installBtn" class="button green disabled">@OneClickCommonResource.Install</a>
     </div>
 
 </div>
 
 <div id="settingsForm" class="form display-none">
-
-    <h2 class="blue">@OneClickHomePageResource.ServerSettingsFormHdr</h2>
-
-    <p class="label">@OneClickHomePageResource.ServerSettingsFormText</p>
-
-    <div id="notificationFieldsForm">
-
-        <div class="bottom-indent">
-            <input id="email" type="text" class="single" placeholder="@OneClickHomePageResource.EmailPlaceholder" />
-        </div>
-
-        <div class="bottom-indent">
-            <a id="notifybtn" class="button green disabled">@OneClickCommonResource.Notify</a>
-        </div>
-
-    </div>
 
 </div>

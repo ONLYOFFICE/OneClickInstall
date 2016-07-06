@@ -11,19 +11,26 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-STR_PORTS=${1}
-ARRAY_PORTS=(${STR_PORTS//,/ })
+IMAGE_NAME=$1;
+IMAGE_VERSION=$2;
 
-for PORT in "${ARRAY_PORTS[@]}"
-do
-	REGEXP=":$PORT$"
-	CHECK_RESULT=$(sudo netstat -lnp | awk '{print $4}' | grep $REGEXP)
+if [[ -z ${IMAGE_NAME} || -z ${IMAGE_VERSION} ]]; then
+	echo "Docker pull argument exception: repository=$IMAGE_NAME, tag=$IMAGE_VERSION"
+	echo "INSTALLATION-STOP-ERROR";
+	exit 0;
+fi
 
-	if [[ $CHECK_RESULT != "" ]]; then
-		echo "The following ports must be open: $PORT"
-		echo "INSTALLATION-STOP-ERROR[3]"
-		exit 0;
-	fi
+EXIST=$(sudo docker images | grep "$IMAGE_NAME" | awk '{print $2;}' | grep -x "$IMAGE_VERSION");
+COUNT=1;
+
+while [[ -z $EXIST && $COUNT -le 3 ]]; do
+	sudo docker pull ${IMAGE_NAME}:${IMAGE_VERSION}
+	EXIST=$(sudo docker images | grep "$IMAGE_NAME" | awk '{print $2;}' | grep -x "$IMAGE_VERSION");
+	(( COUNT++ ))
 done
 
-echo "INSTALLATION-STOP-SUCCESS"
+if [[ -z $EXIST ]]; then
+	echo "Docker image $IMAGE_NAME:$IMAGE_VERSION not found"
+	echo "INSTALLATION-STOP-ERROR";
+	exit 0;
+fi

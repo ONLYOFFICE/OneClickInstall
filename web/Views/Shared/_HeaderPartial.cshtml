@@ -1,4 +1,5 @@
-﻿
+﻿@using OneClickInstallation.Resources
+
 @{
     var currentAction = ViewContext.RouteData.Values["action"].ToString().ToLower();
     var currentLang = System.Threading.Thread.CurrentThread.CurrentCulture.TwoLetterISOLanguageName;
@@ -32,6 +33,12 @@
         <a href="@Url.Action("Index")" class="white uppercase selected">
             @OneClickHomePageResource.Home
         </a>
+
+        <a href="@string.Format("http://helpcenter.onlyoffice.com/{0}server/docker/oneclickinstall/faq.aspx", String.Equals(currentLang, "en", StringComparison.OrdinalIgnoreCase) ? "" : currentLang + "/")"
+            target="_blank" class="white uppercase">
+            @OneClickHomePageResource.FAQ
+        </a>
+
         <a href="@string.Format("http://www.onlyoffice.com/{0}/about.aspx", currentLang)" target="_blank" class="white uppercase">
             @OneClickCommonResource.About
         </a>

@@ -24,9 +24,9 @@ using System.Globalization;
 using System.Resources;
 using System.Text;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using OneClickInstallation.Helpers;
 using OneClickInstallation.Resources;
-using TMResourceData;
 
 namespace OneClickInstallation.Controllers
 {
@@ -82,22 +82,13 @@ namespace OneClickInstallation.Controllers
             var script = string.Empty;
             foreach (var pair in resources)
             {
-                var set = pair.Item1.GetResourceSet(new CultureInfo(culture), true, true);
-                var baseSet = pair.Item1.GetResourceSet(new CultureInfo(LangHelper.DefaultLanguage), true, true);
-
-                var dbManager = pair.Item1 as DBResourceManager;
-                var baseNeutral = baseSet;
-
-                if (dbManager != null)
-                {
-                    baseNeutral = dbManager.GetBaseNeutralResourceSet();
-                }
-
+                var baseSet = pair.Item1.GetResourceSet(CultureInfo.InvariantCulture, true, true);
                 var js = new StringBuilder(pair.Item2 + "={");
-                foreach (DictionaryEntry entry in baseNeutral)
+                foreach (DictionaryEntry entry in baseSet)
                 {
-                    var value = set.GetString((string)entry.Key) ?? baseSet.GetString((string)entry.Key) ?? baseNeutral.GetString((string)entry.Key) ?? string.Empty;
-                    js.AppendFormat("\"{0}\":\"{1}\",", entry.Key, (value).Replace("\"", "\\\""));
+                    var key = (string)entry.Key;
+                    var value = pair.Item1.GetString(key, new CultureInfo(culture)) ?? string.Empty;
+                    js.AppendFormat("\"{0}\":{1},", entry.Key, JsonConvert.SerializeObject(value));
                 }
 
                 script += js.ToString();

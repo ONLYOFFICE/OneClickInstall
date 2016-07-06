@@ -32,9 +32,13 @@ namespace OneClickInstallation.Classes
     public class InstallationManager : IDisposable
     {
         private string UserId { get; set; }
+        private string LicenseKey { get; set; }
+        private bool Enterprise { get; set; }
+
         private ConnectionInfo ConnectionInfo { get; set; }
         private InstallationProgressModel InstallationProgress { get; set; }
         private InstallationComponentsModel InstallationComponents { get; set; }
+        private InstallationComponentsModel InstalledComponents { get; set; }
 
         private SshClient _sshClient;
         private SftpClient _sftpClient;
@@ -85,9 +89,12 @@ namespace OneClickInstallation.Classes
         public InstallationManager(string userId, ConnectionSettingsModel connectionSettings, InstallationComponentsModel installationComponents = null)
         {
             UserId = userId;
+            LicenseKey = connectionSettings.LicenseKey;
+            Enterprise = connectionSettings.Enterprise;
             ConnectionInfo = GetConnectionInfo(connectionSettings);
             InstallationProgress = CacheHelper.GetInstallationProgress(userId) ?? new InstallationProgressModel();
             InstallationComponents = installationComponents;
+            InstalledComponents = CacheHelper.GetInstalledComponents(userId) ?? new InstallationComponentsModel();
         }
 
         public void StartInstallation()
@@ -98,22 +105,24 @@ namespace OneClickInstallation.Classes
 
                 UploadFiles();
 
-                var osInfo = GetOsInfo(FileMap.GetOsInfoScript);
+                var osInfo = GetOsInfo(FileMap.GetOsInfoScript, InstallationProgressStep.GetOsInfo);
 
                 CheckPorts();
 
                 InstallDocker(osInfo);
 
-                if (InstallationComponents.DocumentServer)
-                    InstallDocumentServer();
+                CreateNetwork();
 
-                if (InstallationComponents.MailServer)
-                    InstallMailServer();
+                InstallDocumentServer();
 
-                if (InstallationComponents.CommunityServer)
-                    InstallCommunityServer();
+                InstallMailServer();
 
-                CheckPreviousVersion(FileMap.CheckPreviousVersionScript);
+                if (Enterprise)
+                    InstallControlPanel();
+
+                InstallCommunityServer();
+
+                CheckPreviousVersion(FileMap.CheckPreviousVersionScript, true);
 
                 WarmUp();
             }
@@ -131,17 +140,20 @@ namespace OneClickInstallation.Classes
             }
         }
 
-        public InstallationComponentsModel Connect()
+        public Tuple<OsInfo, InstallationComponentsModel> Connect()
         {
             var tmpCheckPreviousVersionScript = new FileMap("~/Executables/tools/check-previous-version.sh", "./");
+            var tmpGetOsInfoScript = new FileMap("~/Executables/tools/get-os-info.sh", "./");
 
-            UploadFile(tmpCheckPreviousVersionScript);
+            UploadFile(tmpCheckPreviousVersionScript, tmpGetOsInfoScript);
 
-            CheckPreviousVersion(tmpCheckPreviousVersionScript);
+            CheckPreviousVersion(tmpCheckPreviousVersionScript, false);
+            var osInfo = GetOsInfo(tmpGetOsInfoScript, null);
 
             SftpClient.DeleteFile(tmpCheckPreviousVersionScript.RemotePath);
+            SftpClient.DeleteFile(tmpGetOsInfoScript.RemotePath);
 
-            return CacheHelper.GetInstalledComponents(UserId);
+            return new Tuple<OsInfo, InstallationComponentsModel>(osInfo, CacheHelper.GetInstalledComponents(UserId));
         }
 
         private static ConnectionInfo GetConnectionInfo(ConnectionSettingsModel connectionSettings)
@@ -169,14 +181,36 @@ namespace OneClickInstallation.Classes
 
             CreateDirectories();
 
-            UploadFile(FileMap.GetOsInfoScript,
-                       FileMap.CheckPortsScript,
-                       FileMap.CheckPreviousVersionScript,
-                       FileMap.MakeDirScript,
-                       FileMap.RunDockerScript,
-                       FileMap.RunCommunityServerScript,
-                       FileMap.RunDocumentServerScript,
-                       FileMap.RunMailServerScript);
+            var files = new List<FileMap>
+                {
+                    FileMap.RunDockerScript,
+
+                    FileMap.CheckBindingsScript,
+                    FileMap.CheckPortsScript,
+                    FileMap.CheckPreviousVersionScript,
+                    FileMap.GetAvailableVersionScript,
+                    FileMap.GetOsInfoScript,
+                    FileMap.LoginDockerScript,
+                    FileMap.MakeDirScript,
+                    FileMap.MakeNetworkScript,
+                    FileMap.PullImageScript,
+                    FileMap.RemoveContainerScript,
+
+                    FileMap.RunCommunityServerScript,
+                    FileMap.RunControlPanelScript,
+                    FileMap.RunDocumentServerScript,
+                    FileMap.RunMailServerScript
+                };
+
+            if (Enterprise && !string.IsNullOrEmpty(LicenseKey))
+            {
+                files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "DocumentServer"));
+                files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "MailServer"));
+                files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "CommunityServer"));
+                files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "ControlPanel"));
+            }
+
+            UploadFile(files.ToArray());
         }
 
         private void UploadFile(params FileMap[] files)
@@ -190,7 +224,7 @@ namespace OneClickInstallation.Classes
 
                 using (var fileStream = File.OpenRead(file.LocalPath))
                 {
-                    SftpClient.UploadFile(fileStream, file.FileName, true);
+                    SftpClient.UploadFile(fileStream, file.IsScriptFile ? file.FileName : "license.lic", true);
                 }
             }
 
@@ -208,180 +242,196 @@ namespace OneClickInstallation.Classes
             SftpClient.DeleteFile(tmpScript.RemotePath);
         }
 
-        private OsInfo GetOsInfo(FileMap script)
+        private OsInfo GetOsInfo(FileMap script, InstallationProgressStep? progressStep)
         {
-            InstallationProgress.Step = InstallationProgressStep.GetOsInfo;
-            CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
-
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
-            {
-                stream.WriteLine(string.Format("sudo bash {0}", script.RemotePath));
-
-                var output = stream.Expect(Settings.InstallationStopPattern);
-
-                if (output.Contains(Settings.InstallationSuccessPattern))
-                    InstallationProgress.ProgressText += output;
-
-                if (output.Contains(Settings.InstallationErrorPattern))
-                    throw new Exception(output);
-            }
+            var output = RunScript(progressStep, script);
 
             var osInfo = new OsInfo
-                                {
-                                    Dist = GetTerminalParam(InstallationProgress.ProgressText, "DIST"),
-                                    Ver = GetTerminalParam(InstallationProgress.ProgressText, "REV"),
-                                    Type = GetTerminalParam(InstallationProgress.ProgressText, "MACH"),
-                                    Kernel = GetTerminalParam(InstallationProgress.ProgressText, "KERNEL")
-                                };
+                {
+                    Dist = GetTerminalParam(output, "DIST"),
+                    Ver = GetTerminalParam(output, "REV"),
+                    Type = GetTerminalParam(output, "MACH"),
+                    Kernel = GetTerminalParam(output, "KERNEL")
+                };
+
+            CacheHelper.SetOsInfo(UserId, osInfo);
 
             return osInfo;
         }
 
         private void CheckPorts()
         {
-            InstallationProgress.Step = InstallationProgressStep.CheckPorts;
-            CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
+            var ports = new List<int>();
 
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
-            {
-                stream.WriteLine(string.Format("sudo bash {0} {1}",
-                    FileMap.CheckPortsScript.RemotePath,
-                    InstallationComponents.MailServer.ToString().ToLower()));
+            if (!string.IsNullOrEmpty(InstallationComponents.CommunityServerVersion) && string.IsNullOrEmpty(InstalledComponents.CommunityServerVersion))
+                ports.AddRange(new[] {80, 443, 5222});
 
-                var output = stream.Expect(Settings.InstallationStopPattern);
+            if (!string.IsNullOrEmpty(InstallationComponents.MailServerVersion) && string.IsNullOrEmpty(InstalledComponents.MailServerVersion))
+                ports.AddRange(new[] {25, 143, 587});
 
-                if (output.Contains(Settings.InstallationSuccessPattern))
-                    InstallationProgress.ProgressText += output;
-
-                if (output.Contains(Settings.InstallationErrorPattern))
-                    throw new Exception(output);
-            }
+            if (ports.Count > 0)
+                RunScript(InstallationProgressStep.CheckPorts, FileMap.CheckPortsScript, string.Join(",", ports));
         }
 
         private void MakeDirectories(FileMap script)
         {
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
-            {
-                stream.WriteLine(string.Format("sudo bash {0} \"{1}\"", script.RemotePath, Settings.RemoteServerDir));
-
-                var output = stream.Expect(Settings.InstallationSuccessPattern);
-
-                InstallationProgress.ProgressText += output;
-            }
+            RunScript(null, script);
         }
 
-        private void CheckPreviousVersion(FileMap script)
+        private void CheckPreviousVersion(FileMap script, bool useSudo)
         {
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
+            var output = RunScript(null,
+                                   script,
+                                   useSudo,
+                                   "-cc " + Settings.DockerCommunityContainerName,
+                                   "-dc " + Settings.DockerDocumentContainerName,
+                                   "-mc " + Settings.DockerMailContainerName,
+                                   "-cpc " + Settings.DockerControlPanelContainerName);
+
+            InstallationComponents = new InstallationComponentsModel
             {
-                stream.WriteLine(string.Format("bash {0}", script.RemotePath));
-
-                var output = stream.Expect(Settings.InstallationStopPattern);
-
-                if (output.Contains(Settings.InstallationSuccessPattern))
-                {
-                    InstallationComponents = new InstallationComponentsModel
-                    {
-                        MailServer = !string.IsNullOrEmpty(GetTerminalParam(output, "MAIL_SERVER_ID")),
-                        DocumentServer = !string.IsNullOrEmpty(GetTerminalParam(output, "DOCUMENT_SERVER_ID")),
-                        CommunityServer = !string.IsNullOrEmpty(GetTerminalParam(output, "COMMUNITY_SERVER_ID"))
-                    };
-
-                    InstallationProgress.ProgressText += output;
-                }
-
-                if (output.Contains(Settings.InstallationErrorPattern))
-                    throw new Exception(output);
-            }
+                MailServerVersion = GetTerminalParam(output, "MAIL_SERVER_VERSION"),
+                DocumentServerVersion = GetTerminalParam(output, "DOCUMENT_SERVER_VERSION"),
+                CommunityServerVersion = GetTerminalParam(output, "COMMUNITY_SERVER_VERSION"),
+                ControlPanelVersion = GetTerminalParam(output, "CONTROL_PANEL_VERSION"),
+                LicenseFileExist = bool.Parse(GetTerminalParam(output, "LICENSE_FILE_EXIST"))
+            };
 
             CacheHelper.SetInstalledComponents(UserId, InstallationComponents.IsEmpty ? null : InstallationComponents);
         }
 
-        private void InstallDocker(OsInfo osInfo, bool afterReboot = false)
+        private void InstallDocker(OsInfo osInfo)
         {
-            if(afterReboot)
-                CheckPorts();
+            RunScript(InstallationProgressStep.InstallDocker,
+                      FileMap.RunDockerScript,
+                      true,
+                      osInfo.Dist,
+                      osInfo.Ver,
+                      osInfo.Kernel,
+                      osInfo.Type);
+        }
 
-            var needReboot = false;
-
-            InstallationProgress.Step = InstallationProgressStep.InstallDocker;
-            CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
-
-            var command = string.Format("sudo bash {0} \"{1}\" \"{2}\" \"{3}\" \"{4}\" {5}",
-                                        FileMap.RunDockerScript.RemotePath,
-                                        osInfo.Dist,
-                                        osInfo.Ver,
-                                        osInfo.Type,
-                                        osInfo.Kernel,
-                                        afterReboot ? true.ToString().ToLower() : string.Empty);
-
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
-            {
-                stream.WriteLine(command);
-
-                var output = stream.Expect(Settings.InstallationStopPattern);
-
-                if (output.Contains(Settings.InstallationRebootPattern))
-                {
-                    InstallationProgress.ProgressText += output;
-                    InstallationProgress.Step = InstallationProgressStep.RebootServer;
-                    CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
-
-                    needReboot = true;
-
-                    stream.WriteLine("sudo reboot");
-
-                    System.Threading.Thread.Sleep(10000);
-                }
-                else
-                {
-                    if (output.Contains(Settings.InstallationSuccessPattern))
-                        InstallationProgress.ProgressText += output;
-
-                    if (output.Contains(Settings.InstallationErrorPattern))
-                        throw new Exception(output);
-                }
-            }
-
-            if (needReboot)
-            {
-                InstallDocker(osInfo, true);
-            }
+        private void CreateNetwork()
+        {
+            RunScript(null, FileMap.MakeNetworkScript, true);
         }
 
         private void InstallCommunityServer()
         {
-            InstallServer(InstallationProgressStep.InstallCommunityServer, FileMap.RunCommunityServerScript);
+            if (string.IsNullOrEmpty(InstallationComponents.CommunityServerVersion)) return;
+
+            var notExist = string.IsNullOrEmpty(InstalledComponents.CommunityServerVersion);
+
+            RunScript(InstallationProgressStep.InstallCommunityServer,
+                          FileMap.RunCommunityServerScript,
+                          "-i " + (Enterprise ? Settings.DockerEnterpriseCommunityImageName : Settings.DockerCommunityImageName),
+                          "-v " + (notExist ? InstallationComponents.CommunityServerVersion : InstalledComponents.CommunityServerVersion),
+                          "-c " + Settings.DockerCommunityContainerName,
+                          "-dc " + Settings.DockerDocumentContainerName,
+                          "-mc " + Settings.DockerMailContainerName,
+                          "-cc " + Settings.DockerControlPanelContainerName,
+                          "-p " + Settings.DockerHubPassword,
+                          "-un " + Settings.DockerHubUserName,
+                          notExist ? string.Empty : "-u");
+
+            if (!notExist) return;
+
+            InstalledComponents.CommunityServerVersion = InstallationComponents.CommunityServerVersion;
+            CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
         }
 
         private void InstallDocumentServer()
         {
-            InstallServer(InstallationProgressStep.InstallDocumentServer, FileMap.RunDocumentServerScript);
+            if (string.IsNullOrEmpty(InstallationComponents.DocumentServerVersion)) return;
+
+            var notExist = string.IsNullOrEmpty(InstalledComponents.DocumentServerVersion);
+
+            RunScript(InstallationProgressStep.InstallDocumentServer,
+                          FileMap.RunDocumentServerScript,
+                          "-i " + (Enterprise ? Settings.DockerEnterpriseDocumentImageName : Settings.DockerDocumentImageName),
+                          "-v " + (notExist ? InstallationComponents.DocumentServerVersion : InstalledComponents.DocumentServerVersion),
+                          "-c " + Settings.DockerDocumentContainerName,
+                          "-p " + Settings.DockerHubPassword,
+                          "-un " + Settings.DockerHubUserName,
+                          notExist ? string.Empty : "-u");
+
+            if (!notExist) return;
+
+            InstalledComponents.DocumentServerVersion = InstallationComponents.DocumentServerVersion;
+            CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
         }
 
         private void InstallMailServer()
         {
-            InstallServer(InstallationProgressStep.InstallMailServer, FileMap.RunMailServerScript, InstallationComponents.MailDomain);
+            if (string.IsNullOrEmpty(InstallationComponents.MailServerVersion)) return;
+
+            var notExist = string.IsNullOrEmpty(InstalledComponents.MailServerVersion);
+
+            RunScript(InstallationProgressStep.InstallMailServer,
+                          FileMap.RunMailServerScript,
+                          "-i " + (Enterprise ? Settings.DockerEnterpriseMailImageName : Settings.DockerMailImageName),
+                          "-v " + (notExist ? InstallationComponents.MailServerVersion : InstalledComponents.MailServerVersion),
+                          "-c " + Settings.DockerMailContainerName,
+                          string.IsNullOrEmpty(InstallationComponents.MailDomain) ? string.Empty : "-d " + InstallationComponents.MailDomain,
+                          "-p " + Settings.DockerHubPassword,
+                          "-un " + Settings.DockerHubUserName,
+                          notExist ? string.Empty : "-u");
+
+            if (!notExist) return;
+
+            InstalledComponents.MailServerVersion = InstallationComponents.MailServerVersion;
+            CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
         }
 
-        private void InstallServer(InstallationProgressStep progressStep, FileMap runServerScript, string serverScriptParam = "")
+        private void InstallControlPanel()
         {
-            InstallationProgress.Step = progressStep;
-            CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
+            if (string.IsNullOrEmpty(InstallationComponents.ControlPanelVersion)) return;
 
-            using (var stream = SshClient.CreateShellStream("terminal", 150, 24, 800, 600, 1024))
+            var notExist = string.IsNullOrEmpty(InstalledComponents.ControlPanelVersion);
+
+            RunScript(InstallationProgressStep.InstallControlPanel,
+                          FileMap.RunControlPanelScript,
+                          "-i " + (Enterprise ? Settings.DockerEnterpriseControlPanelImageName : Settings.DockerControlPanelImageName),
+                          "-v " + (notExist ? InstallationComponents.ControlPanelVersion : InstalledComponents.ControlPanelVersion),
+                          "-c " + Settings.DockerControlPanelContainerName,
+                          "-p " + Settings.DockerHubPassword,
+                          "-un " + Settings.DockerHubUserName,
+                          notExist ? string.Empty : "-u");
+
+            if (!notExist) return;
+
+            InstalledComponents.ControlPanelVersion = InstallationComponents.ControlPanelVersion;
+            CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
+        }
+
+        private string RunScript(InstallationProgressStep? progressStep, FileMap runServerScript, params string[] scriptParams)
+        {
+            return RunScript(progressStep, runServerScript, true, scriptParams);
+        }
+        
+        private string RunScript(InstallationProgressStep? progressStep, FileMap runServerScript, bool useSudo, params string[] scriptParams)
+        {
+            if (progressStep.HasValue)
             {
-                stream.WriteLine(!string.IsNullOrEmpty(serverScriptParam)
-                                     ? string.Format("sudo bash {0} \"{1}\"", runServerScript.RemotePath, serverScriptParam)
-                                     : string.Format("sudo bash {0}", runServerScript.RemotePath));
+                InstallationProgress.Step = progressStep.Value;
+                CacheHelper.SetInstallationProgress(UserId, InstallationProgress);
+            }
+
+            var commandFormat = (useSudo ? "sudo " : string.Empty) + "bash {0} {1}";
+
+            using (var stream = SshClient.CreateShellStream("terminal", 300, 100, 800, 600, 1024))
+            {
+                stream.WriteLine(string.Format(commandFormat, runServerScript.RemotePath, String.Join(" ", scriptParams)));
 
                 var output = stream.Expect(Settings.InstallationStopPattern);
+
+                if (output.Contains(Settings.InstallationErrorPattern))
+                    throw new Exception(output);
 
                 if (output.Contains(Settings.InstallationSuccessPattern))
                     InstallationProgress.ProgressText += output;
 
-                if (output.Contains(Settings.InstallationErrorPattern))
-                    throw new Exception(output);
+                return output;
             }
         }
 
@@ -397,6 +447,8 @@ namespace OneClickInstallation.Classes
         {
             foreach (var file in files)
             {
+                if (!file.IsScriptFile) continue;
+
                 RunCommand(sshClient, string.Format("chmod +x {0}", file.RemotePath));
                 RunCommand(sshClient, string.Format("sed -i 's/\r$//' {0}", file.RemotePath));
             }
@@ -450,12 +502,21 @@ namespace OneClickInstallation.Classes
 
         private class FileMap
         {
-            public static readonly FileMap GetOsInfoScript = MakeSetupFileMap("get-os-info.sh", "tools");
+            public static readonly FileMap RunDockerScript = MakeSetupFileMap("run-docker.sh", "assets");
+
+            public static readonly FileMap CheckBindingsScript = MakeSetupFileMap("check-bindings.sh", "tools");
             public static readonly FileMap CheckPortsScript = MakeSetupFileMap("check-ports.sh", "tools");
             public static readonly FileMap CheckPreviousVersionScript = MakeSetupFileMap("check-previous-version.sh", "tools");
+            public static readonly FileMap GetAvailableVersionScript = MakeSetupFileMap("get-available-version.sh", "tools");
+            public static readonly FileMap GetOsInfoScript = MakeSetupFileMap("get-os-info.sh", "tools");
+            public static readonly FileMap LoginDockerScript = MakeSetupFileMap("login-docker.sh", "tools");
             public static readonly FileMap MakeDirScript = MakeSetupFileMap("make-dir.sh", "tools");
-            public static readonly FileMap RunDockerScript = MakeSetupFileMap("run-docker.sh", "assets");
+            public static readonly FileMap MakeNetworkScript = MakeSetupFileMap("make-network.sh", "tools");
+            public static readonly FileMap PullImageScript = MakeSetupFileMap("pull-image.sh", "tools");
+            public static readonly FileMap RemoveContainerScript = MakeSetupFileMap("remove-container.sh", "tools");
+
             public static readonly FileMap RunCommunityServerScript = MakeSetupFileMap("run-community-server.sh");
+            public static readonly FileMap RunControlPanelScript = MakeSetupFileMap("run-control-panel.sh");
             public static readonly FileMap RunDocumentServerScript = MakeSetupFileMap("run-document-server.sh");
             public static readonly FileMap RunMailServerScript = MakeSetupFileMap("run-mail-server.sh");
 
@@ -463,16 +524,23 @@ namespace OneClickInstallation.Classes
             public string RemoteDir { get; private set; }
             public string FileName { get { return Path.GetFileName(LocalPath); } }
             public string RemotePath { get { return Path.Combine(RemoteDir, FileName).Replace("\\", "/"); } }
+            public bool IsScriptFile { get; private set; }
 
-            public FileMap(string localPath, string remoteDir)
+            public FileMap(string localPath, string remoteDir, bool isScriptFile = true)
             {
                 LocalPath = HttpContext.Current.Server.MapPath(localPath);
                 RemoteDir = remoteDir.TrimEnd('/').Replace("\\", "/");
+                IsScriptFile = isScriptFile;
             }
 
             private static FileMap MakeSetupFileMap(string script, string subFolder = "")
             {
                 return new FileMap(Path.Combine("~/Executables", subFolder, script), Path.Combine(Settings.RemoteServerDir, "setup", subFolder));
+            }
+
+            public static FileMap MakeLicenseFileMap(string fileName, string moduleName)
+            {
+                return new FileMap(FileHelper.GetTmpFileVirtualPath(fileName), Path.Combine(Settings.RemoteServerDir, moduleName, "data"), false);
             }
         }
     }

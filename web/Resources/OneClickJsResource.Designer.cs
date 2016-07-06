@@ -61,15 +61,6 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email sended.
-        /// </summary>
-        public static string EmailSendedMsg {
-            get {
-                return ResourceManager.GetString("EmailSendedMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Currently only supports 64bit OS&apos;s.
         /// </summary>
         public static string ErrorInstallation1 {
@@ -88,7 +79,7 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The following ports must be open: 80, 443 (25 for Mail Server).
+        ///   Looks up a localized string similar to The required ports are closed.
         /// </summary>
         public static string ErrorInstallation3 {
             get {
@@ -133,6 +124,42 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To perform this action you must be logged in with root rights.
+        /// </summary>
+        public static string ErrorInstallation8 {
+            get {
+                return ResourceManager.GetString("ErrorInstallation8", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create trial license. Invalid input parameter..
+        /// </summary>
+        public static string ErrorInstallationExternal1 {
+            get {
+                return ResourceManager.GetString("ErrorInstallationExternal1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create trial license.  An internal error is occured..
+        /// </summary>
+        public static string ErrorInstallationExternal2 {
+            get {
+                return ResourceManager.GetString("ErrorInstallationExternal2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create trial license. The hostname has been assigned to another email address..
+        /// </summary>
+        public static string ErrorInstallationExternal3 {
+            get {
+                return ResourceManager.GetString("ErrorInstallationExternal3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid domain name.
         /// </summary>
         public static string ErrorInvalidDomainName {
@@ -169,38 +196,11 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reboot the server.
-        /// </summary>
-        public static string InstallationStepRebootMsg {
-            get {
-                return ResourceManager.GetString("InstallationStepRebootMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Please wait....
         /// </summary>
         public static string LoaderMsg {
             get {
                 return ResourceManager.GetString("LoaderMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to I want to be notified about the release of a new product. My email: {0}.
-        /// </summary>
-        public static string NotyfyEmailBody {
-            get {
-                return ResourceManager.GetString("NotyfyEmailBody", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Control Panel Subscription.
-        /// </summary>
-        public static string NotyfyEmailSubject {
-            get {
-                return ResourceManager.GetString("NotyfyEmailSubject", resourceCulture);
             }
         }
     }

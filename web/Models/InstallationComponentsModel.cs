@@ -21,14 +21,33 @@ namespace OneClickInstallation.Models
 {
     public class InstallationComponentsModel
     {
-        public bool CommunityServer { get; set; }
-        public bool DocumentServer { get; set; }
-        public bool MailServer { get; set; }
+        public string CommunityServerVersion { get; set; }
+        public string DocumentServerVersion { get; set; }
+        public string MailServerVersion { get; set; }
         public string MailDomain { get; set; }
+        public string ControlPanelVersion { get; set; }
+        public bool LicenseFileExist { get; set; }
 
         public bool IsEmpty
         {
-            get { return !CommunityServer && !DocumentServer && !MailServer; }
+            get
+            {
+                return string.IsNullOrEmpty(CommunityServerVersion) &&
+                       string.IsNullOrEmpty(DocumentServerVersion) &&
+                       string.IsNullOrEmpty(MailServerVersion) &&
+                       string.IsNullOrEmpty(ControlPanelVersion);
+            }
+        }
+
+        public bool IsFull
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(CommunityServerVersion) &&
+                       !string.IsNullOrEmpty(DocumentServerVersion) &&
+                       !string.IsNullOrEmpty(MailServerVersion) &&
+                       !string.IsNullOrEmpty(ControlPanelVersion);
+            }
         }
     }
 }

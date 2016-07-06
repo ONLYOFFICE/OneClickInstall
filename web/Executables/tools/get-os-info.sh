@@ -11,84 +11,72 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-lowercase(){
+to_lowercase () {
 	echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/"
 }
 
-shootProfile(){
-	OS=`lowercase \`uname\``
-	KERNEL=`uname -r`
-	MACH=`uname -m`
+get_os_info () {
+	OS=`to_lowercase \`uname\``
 
 	if [ "${OS}" == "windowsnt" ]; then
-		OS=windows
+		echo "Not supported OS";
+		exit 0;
 	elif [ "${OS}" == "darwin" ]; then
-		OS=mac
+		echo "Not supported OS";
+		exit 0;
 	else
 		OS=`uname`
+
 		if [ "${OS}" = "SunOS" ] ; then
-			OS=Solaris
-			ARCH=`uname -p`
-			OSSTR="${OS} ${REV}(${ARCH} `uname -v`)"
+			echo "Not supported OS";
+			exit 0;
 		elif [ "${OS}" = "AIX" ] ; then
-			OSSTR="${OS} `oslevel` (`oslevel -r`)"
+			echo "Not supported OS";
+			exit 0;
 		elif [ "${OS}" = "Linux" ] ; then
-			
+			MACH=`uname -m`
+
+			if [ "${MACH}" != "x86_64" ]; then
+				echo "Currently only supports 64bit OS's";
+				exit 0;
+			fi
+
+			KERNEL=`uname -r`
+
 			if [ -f /etc/redhat-release ] ; then
-				DistroBasedOn='RedHat'
 				DIST=`cat /etc/redhat-release |sed s/\ release.*//`
-				PSUEDONAME=`cat /etc/redhat-release | sed s/.*\(// | sed s/\)//`
 				REV=`cat /etc/redhat-release | sed s/.*release\ // | sed s/\ .*//`
 			elif [ -f /etc/SuSE-release ] ; then
-				DistroBasedOn='SuSe'
-				PSUEDONAME=`cat /etc/SuSE-release | tr "\n" ' '| sed s/VERSION.*//`
-				REV=`cat /etc/SuSE-release | tr "\n" ' ' | sed s/.*=\ //`
-			elif [ -f /etc/mandrake-release ] ; then
-				DistroBasedOn='Mandrake'
-				PSUEDONAME=`cat /etc/mandrake-release | sed s/.*\(// | sed s/\)//`
-				REV=`cat /etc/mandrake-release | sed s/.*release\ // | sed s/\ .*//`
+				REV=`cat /etc/os-release  | grep '^VERSION_ID' | awk -F=  '{ print $2 }' |  sed -e 's/^"//'  -e 's/"$//'`
+				DIST='SuSe'
 			elif [ -f /etc/debian_version ] ; then
-				DistroBasedOn='Debian'
 				REV=`cat /etc/debian_version`
-				DIST=$DistroBasedOn
-
+				DIST='Debian'
 				if [ -f /etc/lsb-release ] ; then
 					DIST=`cat /etc/lsb-release | grep '^DISTRIB_ID' | awk -F=  '{ print $2 }'`
-					PSUEDONAME=`cat /etc/lsb-release | grep '^DISTRIB_CODENAME' | awk -F=  '{ print $2 }'`
 					REV=`cat /etc/lsb-release | grep '^DISTRIB_RELEASE' | awk -F=  '{ print $2 }'`
 				elif [[ -f /etc/lsb_release ]]; then
 					DIST=`lsb_release -a 2>&1 | grep 'Distributor ID:' | awk -F ":" '{print $2 }'`
-					PSUEDONAME=`lsb_release -a 2>&1 | grep 'Codename:' | awk -F ":" '{print $2 }'`
 					REV=`lsb_release -a 2>&1 | grep 'Release:' | awk -F ":" '{print $2 }'`
 				fi
 			fi
 
-			if [ -f /etc/UnitedLinux-release ] ; then
-				DIST="${DIST}[`cat /etc/UnitedLinux-release | tr "\n" ' ' | sed s/VERSION.*//`]"
-			fi
-			
-			OS=`lowercase $OS`
-			DistroBasedOn=`lowercase $DistroBasedOn`
-			readonly OS
 			readonly DIST
-			readonly DistroBasedOn
-			readonly PSUEDONAME
 			readonly REV
 			readonly KERNEL
 			readonly MACH
-		fi
 
+		fi
 	fi
 }
 
-shootProfile
 
-echo "OS: [$OS]"
+
+get_os_info
+
 echo "DIST: [$DIST]"
 echo "REV: [$REV]"
 echo "MACH: [$MACH]"
-echo "PSUEDONAME: [$PSUEDONAME]"
-echo "DistroBasedOn: [$DistroBasedOn]"
 echo "KERNEL: [$KERNEL]"
 
 echo "INSTALLATION-STOP-SUCCESS"

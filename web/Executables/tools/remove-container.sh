@@ -11,19 +11,29 @@
 # See the License for the specific language governing permissions and limitations under the License.
 # You can contact Ascensio System SIA by email at sales@onlyoffice.com
 
-STR_PORTS=${1}
-ARRAY_PORTS=(${STR_PORTS//,/ })
+remove_container () {
+	CONTAINER_NAME=$1;
 
-for PORT in "${ARRAY_PORTS[@]}"
-do
-	REGEXP=":$PORT$"
-	CHECK_RESULT=$(sudo netstat -lnp | awk '{print $4}' | grep $REGEXP)
-
-	if [[ $CHECK_RESULT != "" ]]; then
-		echo "The following ports must be open: $PORT"
-		echo "INSTALLATION-STOP-ERROR[3]"
+	if [[ -z ${CONTAINER_NAME} ]]; then
+		echo "Empty container name"
+		echo "INSTALLATION-STOP-ERROR";
 		exit 0;
 	fi
-done
 
-echo "INSTALLATION-STOP-SUCCESS"
+	echo "stop container:"
+	sudo docker stop ${CONTAINER_NAME};
+	echo "remove container:"
+	sudo docker rm -f ${CONTAINER_NAME};
+
+	sleep 10 #Hack for SuSe: exception "Error response from daemon: devmapper: Unknown device xxx"
+
+	echo "check removed container:"
+	CONTAINER_ID=$(sudo docker inspect --format='{{.Id}}' ${CONTAINER_NAME});
+
+	if [[ -n ${CONTAINER_ID} ]]; then
+		echo "try again remove ${CONTAINER_NAME}"
+		remove_container ${CONTAINER_NAME}
+	fi
+}
+
+remove_container $1

@@ -5,16 +5,22 @@
     <div class="disconnected display-none">
         
         <h1 class="blue">@OneClickHomePageResource.ConnectionSettingsFormDescHdr</h1> 
-
-        <p class="bottom-indent-big">@OneClickHomePageResource.ConnectionSettingsFormDescText</p>
+        
+        @if (ViewBag.Enterprise)
+        {
+            <p class="bottom-indent-big">@OneClickHomePageResource.ConnectionSettingsFormDescText_Enterprise</p>
+        }
+        else
+        {
+            <p class="bottom-indent-big">@OneClickHomePageResource.ConnectionSettingsFormDescText_Community</p>
+        }
 
         <div class="install-step-img bottom-indent"></div>
 
-        <div class="bottom-indent-big">
+        <div class="bottom-indent-big clear-fix">
             <div class="install-step semibold">@OneClickHomePageResource.ConnectStepText</div>
             <div class="install-step semibold">@OneClickHomePageResource.InstallStepText</div>
-            <div class="install-step semibold">@OneClickHomePageResource.CustomStepText</div>
-            <p class="label">@OneClickHomePageResource.CustomStepTitleText</p>
+            <div class="install-step semibold">@OneClickHomePageResource.UsingStepText</div>
         </div>
 
         <div class="bottom-indent-big">
@@ -76,7 +82,7 @@
     <div class="description display-none">
 
         <h1 class="blue">@OneClickHomePageResource.SetupFormDescHdr</h1>
-        <p>@OneClickHomePageResource.CommunityServerText</p>
+        <p>@OneClickHomePageResource.SetupFormDescText</p>
 
         <h2 class="blue">@OneClickHomePageResource.CommunityServerHdr</h2>
         <p>@OneClickHomePageResource.CommunityServerText</p>
@@ -98,6 +104,12 @@
                 </li>
             </ul>
         </div>
+
+        @if (ViewBag.Enterprise)
+        {
+            <h2 class="blue">@OneClickHomePageResource.ControlPanelHdr</h2>
+            <p>@OneClickHomePageResource.ControlPanelText_Enterprise</p>
+        }
 
     </div>
 
@@ -138,6 +150,14 @@
                 <div class="progress-desc label"></div>
                 <div class="progress-icon"></div>
             </div>
+            @if (ViewBag.Enterprise)
+            {
+                <div class="progress-row clear-fix" data-step="@((int) InstallationProgressStep.InstallControlPanel)">
+                    <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallControlPanel</div>
+                    <div class="progress-desc label"></div>
+                    <div class="progress-icon"></div>
+                </div>
+            }
             <div class="progress-row clear-fix" data-step="@((int)InstallationProgressStep.InstallCommunityServer)">
                 <div class="progress-title">@OneClickHomePageResource.InstallationProgressStep_InstallCommunityServer</div>
                 <div class="progress-desc label"></div>
@@ -155,48 +175,17 @@
 </div>
 
 <div id="settingsFormDesc" class="form-desc display-none">
+
     <h1 class="blue">@OneClickHomePageResource.ServerSettingsFormDescHdr</h1>
 
+    <p>@OneClickHomePageResource.ServerSettingsFormDescText_1</p>
+
+    <p>@OneClickHomePageResource.ServerSettingsFormDescText_2</p>
+
     <div class="bottom-indent-big">
-        <a id="enterBtn" class="button green" href="#" target="_blank">
-            @OneClickCommonResource.Enter
+        <a id="enterOnlyofficeBtn" class="button green" href="#" target="_blank">
+            @OneClickCommonResource.EnterOnlyoffice
         </a>
     </div>
-
-    <h2 class="blue clear-fix">
-        <span class="float-left">@OneClickHomePageResource.ContrrolPanelHdr</span>
-        <span class="float-left coming-soon"></span> 
-    </h2>
-
-    <p>@OneClickHomePageResource.ContrrolPanelText</p>
-
-    <table class="bottom-indent" style="width: 100%">
-        <tr>
-            <td>
-                <div class="cp-feature semibold">
-                    <div class="icon https"></div>
-                    @OneClickHomePageResource.ContrrolPanelFeatureHttps
-                </div>
-            </td>
-            <td>
-                <div class="cp-feature semibold">
-                    <div class="icon audit"></div>                    
-                    @OneClickHomePageResource.ContrrolPanelFeatureAudit
-                </div>
-            </td>
-            <td>
-                <div class="cp-feature semibold">
-                    <div class="icon backup"></div>
-                    @OneClickHomePageResource.ContrrolPanelFeatureBackup
-                </div>
-            </td>
-            <td>
-                <div class="cp-feature semibold">
-                    <div class="icon update"></div>
-                    @OneClickHomePageResource.ContrrolPanelFeatureUpdate
-                </div>
-            </td>
-        </tr>
-    </table>
 
 </div>

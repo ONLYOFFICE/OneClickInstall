@@ -52,7 +52,7 @@ namespace OneClickInstallation.Helpers
 
         }
 
-        public static InstallationComponentsModel Connect(string userId, ConnectionSettingsModel connectionSettings)
+        public static Tuple<OsInfo, InstallationComponentsModel> Connect(string userId, ConnectionSettingsModel connectionSettings)
         {
             using (var installationManager = new InstallationManager(userId, connectionSettings))
             {

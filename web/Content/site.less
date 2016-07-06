@@ -61,14 +61,14 @@
     display: none;
 }
 
-.bottom-indent
+.bottom-indent-small
 {
-    margin-bottom: 24px;
+    margin-bottom: 18px;
 }
 
-.bottom-indent-middle
+.bottom-indent
 {
-    margin-bottom: 36px;
+    margin-bottom: 30px;
 }
 
 .bottom-indent-big
@@ -190,14 +190,14 @@
     {
         .icon
         {
-            background-position: -32px -56px;
+            background-position: -31px -57px;
         }
 
         &.selected
         {
             .icon
             {
-                background-position: -6px -56px;
+                background-position: -5px -57px;
             }
         }
 
@@ -205,31 +205,7 @@
         {
             .icon
             {
-                background-position: -58px -56px;
-            }
-        }
-    }
-
-    .setup
-    {
-        .icon
-        {
-            background-position: -32px -82px;
-        }
-
-        &.selected
-        {
-            .icon
-            {
-                background-position: -6px -82px;
-            }
-        }
-
-        &.disabled
-        {
-            .icon
-            {
-                background-position: -58px -82px;
+                background-position: -57px -57px;
             }
         }
     }
@@ -238,14 +214,14 @@
     {
         .icon
         {
-            background-position: -32px -108px;
+            background-position: -31px -83px;
         }
 
         &.selected
         {
             .icon
             {
-                background-position: -6px -108px;
+                background-position: -5px -83px;
             }
         }
 
@@ -253,7 +229,31 @@
         {
             .icon
             {
-                background-position: -58px -108px;
+                background-position: -57px -83px;
+            }
+        }
+    }
+
+    .setup
+    {
+        .icon
+        {
+            background-position: -31px -109px;
+        }
+
+        &.selected
+        {
+            .icon
+            {
+                background-position: -5px -109px;
+            }
+        }
+
+        &.disabled
+        {
+            .icon
+            {
+                background-position: -57px -109px;
             }
         }
     }
@@ -391,16 +391,16 @@
         border-bottom: 1px solid #c1c1c1;
         font-size: 18px;
         font-weight: 100;
-        height: 24px;
-        line-height: 24px;
-        padding: 12px 24px;
+        height: 14px;
+        line-height: 14px;
+        padding: 30px;
     }
 
     .popup-error {
         float: left;
-        margin-right: 8px;
-        height: 25px;
-        width: 25px;
+        margin: -5px 8px 0 0;
+        height: 26px;
+        width: 26px;
         background-image: url("images/sprite.png");
         background-position: 0 0;
         background-repeat: no-repeat;
@@ -408,23 +408,31 @@
 
     .popup-warning {
         float: left;
-        margin-right: 8px;
-        height: 25px;
-        width: 25px;
+        margin: -5px 8px 0 0;
+        height: 26px;
+        width: 26px;
         background-image: url("images/sprite.png");
         background-position: -52px 0;
         background-repeat: no-repeat;
     }
 
     .popup-close {
-        float: right;
-        font-size: 14px;
-        font-weight: bold;
+        background-image: url("images/sprite.png");
+        background-position: 0 -182px;
+        background-repeat: no-repeat;
         cursor: pointer;
+        float: right;
+        height: 26px;
+        margin: -5px 0 0 8px;
+        width: 26px;
+    }
+
+    .popup-close:hover {
+        background-position: -26px -182px;
     }
 
     .popup-body {
-        padding: 24px;
+        padding: 30px;
     }
 }
 
@@ -436,13 +444,13 @@
     background-image: url("images/step.png");
     background-repeat: no-repeat;
     background-position: center center;
-    height: 70px;
+    height: 100px;
 }
 
 .install-step {
-    display: inline-block;
+    float: left;
     text-align: center;
-    width: 202px;
+    width: 33%;
 }
 
 .requirements-box {
@@ -548,40 +556,6 @@
     }
 }
 
-.cp-feature {
-    background-color: #f4f4f4;
-    border: 1px solid #c5c5c5;
-    height: 96px;
-    text-align: center;
-    width: 120px;
-    .borderRadius(3px);
-
-    .icon {
-        height: 42px;
-        width: 42px;
-        margin: 18px auto 4px;
-        background-image: url("images/cp_features.png");
-        background-repeat: no-repeat;
-        background-position: center center;
-
-        &.https {
-            background-position: center -308px;
-        }
-
-        &.audit {
-            background-position: center -176px;
-        }
-
-        &.backup {
-            background-position: center 0;
-        }
-
-        &.update {
-            background-position: center -132px;
-        }
-    } 
-}
-
 .git {
     background-image: url("images/sprite.png");
     background-repeat: no-repeat;
@@ -589,15 +563,4 @@
     height: 26px;
     line-height: 26px;
     padding-left: 32px;
-}
-
-.coming-soon {
-    background-image: url("images/coming_soon.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-    display: inline-block;
-    height: 21px;
-    margin-left: 4px;
-    margin-top: 3px;
-    width: 87px;
 }

@@ -19,26 +19,13 @@
 
 namespace OneClickInstallation.Models
 {
-    public class InstallationProgressModel
+    public class RequestInfoModel
     {
-        public bool IsCompleted { get; set; }
-        public string ProgressText { get; set; }
-        public string ErrorMessage { get; set; }
-        public InstallationProgressStep Step { get; set; }
-    }
-
-    public enum InstallationProgressStep
-    {
-        Start,
-        UploadFiles,
-        GetOsInfo,
-        CheckPorts,
-        InstallDocker,
-        InstallDocumentServer,
-        InstallMailServer,
-        InstallControlPanel,
-        InstallCommunityServer,
-        WarmUp,
-        End
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
+        public string CompanyName { get; set; }
+        public int CompanySize { get; set; }
+        public string Position { get; set; }
     }
 }

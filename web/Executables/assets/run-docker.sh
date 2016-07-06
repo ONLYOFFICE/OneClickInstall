@@ -13,172 +13,171 @@
 
 DIST=${1}
 REV=${2}
-ARCH_TYPE=${3}
-KERNEL=${4}
-IS_REBOOT=${5:-false}
-
-EXIT_STATUS=-1;
-EXIT_NOT_SUPPORTED_OS_STATUS=10;
+KERNEL=${3}
+ARCH_TYPE=${4}
 
 
-command_exists () {
-    type "$1" &> /dev/null ;
+
+check_os_info () {
+	if [[ -z ${DIST} || -z ${REV} || -z ${KERNEL} || -z ${ARCH_TYPE} ]]; then
+		echo "Not supported OS"
+		echo "INSTALLATION-STOP-ERROR[2]"
+		exit 0;
+	fi
+	
+	if [ "${ARCH_TYPE}" != "x86_64" ]; then
+		echo "Currently only supports 64bit OS's";
+		echo "INSTALLATION-STOP-ERROR[1]"
+		exit 0;
+	fi
 }
 
-if command_exists docker ; then
-    echo "docker is already installed."
-    echo "INSTALLATION-STOP-SUCCESS"
-    exit 0;
-fi
+check_kernel () {
+	MIN_NUM_ARR=(3 10 0);
+	CUR_NUM_ARR=();
 
+	CUR_STR_ARR=$(echo $KERNEL | grep -Po "[0-9]+\.[0-9]+\.[0-9]+" | tr "." " ");
+	for CUR_STR_ITEM in $CUR_STR_ARR
+	do
+		CUR_NUM_ARR=(${CUR_NUM_ARR[@]} $CUR_STR_ITEM)
+	done
 
-if [ "${ARCH_TYPE}" != "x86_64" ]; then
-	echo "Currently only supports 64bit OS's";
-	echo "INSTALLATION-STOP-ERROR[1]"
-	exit 0;
-fi
+	INDEX=0;
 
-REV_PARTS=(${REV//\./ })
-REV=${REV_PARTS[0]}
-
-if [ "${DIST}" == "Ubuntu" ]; then
-
-	if [ "${REV}" -ge "14" ]; then
-		sudo apt-get -y update
-		sudo apt-get -y upgrade
-		sudo apt-get -y -q --force-yes install curl
-		sudo curl -sSL https://get.docker.com/ | sh
-	elif [ "${REV}" -eq "13" ]; then
-		sudo apt-get -y update
-		sudo apt-get -y upgrade
-		sudo apt-get -y install linux-image-extra-`uname -r`
-		sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-		sudo sh -c "echo deb http://get.docker.com/ubuntu docker main > /etc/apt/sources.list.d/docker.list"
-		sudo apt-get -y update
-		sudo apt-get -y install lxc-docker
-	elif [ "${REV}" -eq "12" ]; then
-		# install the backported kernel
-		sudo apt-get -y update
-		sudo apt-get -y -q --force-yes install linux-image-generic-lts-trusty
-
-		# reboot
-		if [ "${IS_REBOOT}" == "false" ] ; then
- 			echo "INSTALLATION-STOP-REBOOT"
+	while [[ $INDEX -lt 3 ]]; do
+		if [ ${CUR_NUM_ARR[INDEX]} -lt ${MIN_NUM_ARR[INDEX]} ]; then
+			echo "Not supported OS Kernel"
+			echo "INSTALLATION-STOP-ERROR[7]"
 			exit 0;
+		elif [ ${CUR_NUM_ARR[INDEX]} -gt ${MIN_NUM_ARR[INDEX]} ]; then
+			INDEX=3
 		fi
-		
-		sudo apt-get -y -q --force-yes update
-		sudo apt-get -y -q --force-yes install wget
-		sudo wget -qO- https://get.docker.com/ | sh               
- 
+		(( INDEX++ ))
+	done
+}
+
+command_exists () {
+    type "$1" &> /dev/null;
+}
+
+check_docker_version () {
+	MIN_NUM_ARR=(1 10 0);
+	CUR_NUM_ARR=();
+
+	CUR_STR_ARR=$(docker -v | grep -Po "[0-9]+\.[0-9]+\.[0-9]+" | tr "." " ");
+	for CUR_STR_ITEM in $CUR_STR_ARR
+	do
+		CUR_NUM_ARR=(${CUR_NUM_ARR[@]} $CUR_STR_ITEM)
+	done
+
+	NEED_UPDATE="false"
+	INDEX=0;
+
+	while [[ $INDEX -lt 3 ]]; do
+		if [ ${CUR_NUM_ARR[INDEX]} -lt ${MIN_NUM_ARR[INDEX]} ]; then
+			NEED_UPDATE="true"
+			INDEX=3
+		elif [ ${CUR_NUM_ARR[INDEX]} -gt ${MIN_NUM_ARR[INDEX]} ]; then
+			INDEX=3
+		fi
+		(( INDEX++ ))
+	done
+
+	echo "$NEED_UPDATE"
+}
+
+uninstall_docker () {
+
+	if [ "${DIST}" == "Ubuntu" ] || [ "${DIST}" == "Debian" ]; then
+
+		sudo apt-get -y autoremove --purge docker-engine
+
+	elif [[ "${DIST}" == CentOS* ]] || [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
+
+		sudo yum -y remove docker-engine.x86_64
+
+	elif [ "${DIST}" == "SuSe" ]; then
+
+		sudo zypper rm -y docker
+
+	elif [ "${DIST}" == "Fedora" ]; then
+
+		sudo dnf -y remove docker-engine.x86_64
+
 	else
-		EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
+		echo "Not supported OS"
+		echo "INSTALLATION-STOP-ERROR[2]"
+		exit 0;
 	fi
-	
-elif [ "${DIST}" == "Debian" ]; then
-	
-	if [ "${REV}" -ge "8" ]; then
+}
+
+install_docker () {
+
+	if [ "${DIST}" == "Ubuntu" ] || [ "${DIST}" == "Debian" ]; then
+
 		sudo apt-get -y update
 		sudo apt-get -y upgrade
-		sudo apt-get -y -q --force-yes install curl
+		sudo apt-get -y -q install curl
 		sudo curl -sSL https://get.docker.com/ | sh
-	elif [ "${REV}" -eq "7" ]; then
-		echo "deb http://http.debian.net/debian wheezy-backports main" >>  /etc/apt/sources.list
-		sudo apt-get -y update
-		sudo apt-get -y upgrade
-		sudo apt-get -y -q --force-yes install curl
-		sudo apt-get -y -q --force-yes install -t wheezy-backports linux-image-amd64 
 
-		# reboot
-		if [ "${IS_REBOOT}" == "false" ] ; then
- 			echo "INSTALLATION-STOP-REBOOT"
-			exit 0;
-		fi
+	elif [[ "${DIST}" == CentOS* ]] || [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
 
-		curl -sSL https://get.docker.com/ | sh
-	else
-		EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
-	fi
-	
-elif [[ "${DIST}" == CentOS* ]] || [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
-	
-	if [ "${REV}" -ge "7" ]; then
-                
-		if [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
-			sudo yum -y install yum-utils
-			sudo yum-config-manager --enable rhui-REGION-rhel-server-extras
-		fi
-		
 		sudo yum -y update
 		sudo yum -y upgrade
-		sudo yum -y install docker
-		sudo setenforce 0
-		sudo systemctl stop firewalld.service
-		sudo systemctl disable firewalld.service
-		sudo systemctl start docker.service
-		sudo systemctl enable docker.service
-	elif [ "${REV}" -eq "6" ]; then
-		sudo yum -y update
-		sudo yum -y upgrade
-		sudo yum -y install epel-release
-		sudo yum -y install docker-io
+		sudo yum -y install curl
+		sudo curl -fsSL https://get.docker.com/ | sh
 		sudo service docker start
-		sudo chkconfig docker on
-	else
-		EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
-	fi
-	
-elif [ "${DIST}" == "SuSe" ]; then
-	
-	if [ "${REV}" -ge "13" ]; then
-		sudo zypper ar -f http://download.opensuse.org/repositories/Virtualization/openSUSE_13.1/ Virtualization
-		sudo zypper --non-interactive in docker
+
+	elif [ "${DIST}" == "SuSe" ]; then
+
+		sudo zypper in -y docker
 		sudo systemctl start docker
 		sudo systemctl enable docker
-	elif [ "${REV}" -ge "12" ]; then
-		sudo zypper ar -f http://download.opensuse.org/repositories/Virtualization/openSUSE_12.3/ Virtualization
-		sudo zypper --non-interactive in docker
-		sudo systemctl start docker
-		sudo systemctl enable docker
-	else
-		EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
-	fi
-	
-elif [ "${DIST}" == "Fedora" ]; then
-	
-	if [ "${REV}" -ge "21" ]; then
+
+	elif [ "${DIST}" == "Fedora" ]; then
+
+		sudo dnf -y update
 		sudo yum -y update
 		sudo yum -y upgrade
-		sudo yum -y install docker
-		sudo setenforce 0
+		sudo yum -y install curl
+		sudo curl -fsSL https://get.docker.com/ | sh
 		sudo systemctl start docker
 		sudo systemctl enable docker
-	elif [ "${REV}" -eq "20" ]; then
-		sudo yum -y update
-		sudo yum -y upgrade
-		sudo yum -y remove docker
-		sudo yum -y install docker-io	
-		sudo systemctl start docker
-		sudo systemctl enable docker
+
 	else
-		EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
+		echo "Not supported OS"
+		echo "INSTALLATION-STOP-ERROR[2]"
+		exit 0;
 	fi
 
-else
-	EXIT_STATUS=${EXIT_NOT_SUPPORTED_OS_STATUS};
-fi
+	if ! command_exists docker ; then
+		echo "Error while installing docker"
+		echo "INSTALLATION-STOP-ERROR[6]"
+		exit 0;
+	fi
+	
+	echo "Docker successfully installed"
+	echo "INSTALLATION-STOP-SUCCESS"
+	exit 0;
+}
 
-if [ ${EXIT_STATUS} -eq ${EXIT_NOT_SUPPORTED_OS_STATUS} ]; then
-    echo "Not supported OS"
-    echo "INSTALLATION-STOP-ERROR[2]"
-    exit 0;
-fi
+
+
+check_os_info
+
+check_kernel
 
 if command_exists docker ; then
-    echo "docker successfully installed."
-    echo "INSTALLATION-STOP-SUCCESS"
-    exit 0;
-fi
+	NEED_UPDATE=$(check_docker_version);
 
-echo "error while installing docker."
-echo "INSTALLATION-STOP-ERROR[6]"
+	if [ "$NEED_UPDATE" == "true" ]; then
+		uninstall_docker
+		install_docker
+	else
+		echo "Docker successfully installed"
+		echo "INSTALLATION-STOP-SUCCESS"
+		exit 0;
+	fi
+else
+	install_docker
+fi

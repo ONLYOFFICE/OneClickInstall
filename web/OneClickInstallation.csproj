@@ -42,11 +42,21 @@
     <Reference Include="ASC.Common">
       <HintPath>..\references\ASC.Common.dll</HintPath>
     </Reference>
+    <Reference Include="ASC.Core.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\references\ASC.Core.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ASC.Resource.Data">
+      <HintPath>..\references\ASC.Resource.Data.dll</HintPath>
+    </Reference>
     <Reference Include="dotless.Core">
       <HintPath>..\packages\dotless.1.3.1.0\lib\dotless.Core.dll</HintPath>
     </Reference>
+    <Reference Include="FileConverterUtils2">
+      <HintPath>..\references\FileConverterUtils2.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-client\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -100,9 +110,8 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TMResourceData">
-      <HintPath>..\references\TMResourceData.dll</HintPath>
-    </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
@@ -111,15 +120,16 @@
     <Content Include="404.htm" />
     <Content Include="500.htm" />
     <Content Include="Content\images\combo_gray.png" />
-    <Content Include="Content\images\coming_soon.png" />
     <Content Include="Content\images\corner_top.gif" />
     <Content Include="Content\images\flags.png" />
     <Content Include="Content\images\loader.gif" />
     <Content Include="Content\images\social.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\sprite.png" />
-    <Content Include="Content\images\cp_features.png" />
     <Content Include="Content\images\step.png" />
+    <Content Include="Content\images\toast_icon01.png" />
+    <Content Include="Content\images\toast_icon02.png" />
+    <Content Include="Content\images\toast_icon03.png" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\common.js" />
@@ -138,11 +148,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\LessTransform.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\ImageTag.cs" />
     <Compile Include="Classes\OsInfo.cs" />
-    <Compile Include="Classes\EmailSender.cs" />
     <Compile Include="Classes\InstallationManager.cs" />
     <Compile Include="Helpers\CacheHelper.cs" />
     <Compile Include="Helpers\CookieHelper.cs" />
+    <Compile Include="Helpers\TagHelper.cs" />
     <Compile Include="Helpers\SshHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\Settings.cs" />
@@ -152,6 +163,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\LangHelper.cs" />
+    <Compile Include="Models\RequestInfoModel.cs" />
     <Compile Include="Models\InstallationComponentsModel.cs" />
     <Compile Include="Models\InstallationProgressModel.cs" />
     <Compile Include="Models\ConnectionSettingsModel.cs" />
@@ -242,13 +254,33 @@
     <Content Include="Executables\tools\check-ports.sh" />
     <Content Include="Executables\tools\get-os-info.sh" />
     <Content Include="Executables\run-community-server.sh" />
+    <Content Include="Executables\run-control-panel.sh" />
     <Content Include="Executables\run-document-server.sh" />
     <Content Include="Executables\run-mail-server.sh" />
     <Content Include="Executables\tools\check-previous-version.sh" />
     <Content Include="Executables\tools\make-dir.sh" />
+    <Content Include="Executables\tools\get-available-version.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\tools\make-network.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\tools\check-bindings.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\tools\pull-image.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\tools\remove-container.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\tools\login-docker.sh" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Executables\install.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Executables\restart.sh" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

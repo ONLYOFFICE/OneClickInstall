@@ -124,7 +124,7 @@
     <value>Could not connect to the server.</value>
   </data>
   <data name="ConnectionErrorText_2" xml:space="preserve">
-    <value>Check connection setting and try again.</value>
+    <value>Check the connection settings and make sure that the remote server allows SSH authentication.</value>
   </data>
   <data name="ConnectionSettingsFormText" xml:space="preserve">
     <value>Before you start the installation process, you need to connect to your server. Fill out the form below and click the 'CONNECT' button.</value>
@@ -213,9 +213,6 @@
   <data name="ConnectStepText" xml:space="preserve">
     <value>Connect your server</value>
   </data>
-  <data name="CustomStepText" xml:space="preserve">
-    <value>Customize settings*</value>
-  </data>
   <data name="DocumentServer" xml:space="preserve">
     <value>Document Server</value>
   </data>
@@ -230,9 +227,6 @@
   </data>
   <data name="SetupFormHdr" xml:space="preserve">
     <value>Setup Options</value>
-  </data>
-  <data name="SetupFormText" xml:space="preserve">
-    <value>Community and Document Server will be installed by default. Select Mail Server if you need it.</value>
   </data>
   <data name="MailServer" xml:space="preserve">
     <value>Mail Server</value>
@@ -285,9 +279,6 @@
   <data name="InstallationProgressStep_InstallDocker" xml:space="preserve">
     <value>Installing Docker service</value>
   </data>
-  <data name="InstallationProgressStep_RebootServer" xml:space="preserve">
-    <value>Rebooting the server</value>
-  </data>
   <data name="InstallationProgressStep_InstallDocumentServer" xml:space="preserve">
     <value>Installing Document Server</value>
   </data>
@@ -306,35 +297,8 @@
   <data name="SetupFormDescProgressText" xml:space="preserve">
     <value>The ONLYOFFICE installation process may take a few minutes. Please wait.</value>
   </data>
-  <data name="ContrrolPanelFeatureBackup" xml:space="preserve">
-    <value>Backup</value>
-  </data>
-  <data name="ContrrolPanelFeatureHttps" xml:space="preserve">
-    <value>HTTPS</value>
-  </data>
-  <data name="ContrrolPanelFeatureAudit" xml:space="preserve">
-    <value>Audit Trail</value>
-  </data>
-  <data name="ContrrolPanelFeatureUpdate" xml:space="preserve">
-    <value>Update</value>
-  </data>
-  <data name="ContrrolPanelHdr" xml:space="preserve">
-    <value>Control Panel</value>
-  </data>
-  <data name="ContrrolPanelText" xml:space="preserve">
-    <value>ONLYOFFICE Control Panel is a new way to manage and configure your server in one click. It offers features like ...</value>
-  </data>
-  <data name="EmailPlaceholder" xml:space="preserve">
-    <value>Enter your email</value>
-  </data>
   <data name="ServerSettingsFormDescHdr" xml:space="preserve">
-    <value>Congratulations, the installation process is successfully completed!</value>
-  </data>
-  <data name="ServerSettingsFormHdr" xml:space="preserve">
-    <value>Control Panel</value>
-  </data>
-  <data name="ServerSettingsFormText" xml:space="preserve">
-    <value>The Control Panel is in beta stage and will be available soon. Enter your email below to be the first to learn about the release.</value>
+    <value>Congratulations! You have successfully installed ONLYOFFICE!</value>
   </data>
   <data name="SourceDesc" xml:space="preserve">
     <value>ONLYOFFICE Installer is distributed under the Apache license. The source code is listed on GitHub.</value>
@@ -342,31 +306,94 @@
   <data name="SourceLinkText" xml:space="preserve">
     <value>Fork me on GitHub</value>
   </data>
-  <data name="CustomStepTitleText" xml:space="preserve">
-    <value>* Advanced configuration settings provided on commercial basis</value>
-  </data>
   <data name="SetupFormDescHdr" xml:space="preserve">
     <value>Congratulations! Server connection established successfully.</value>
   </data>
   <data name="ConnectionSettingsConnectedFormDescText" xml:space="preserve">
     <value>To connect to a different server, you will need to disconnect first.</value>
   </data>
-  <data name="ConnectionSettingsFormDescText" xml:space="preserve">
-    <value>An ONLYOFFICE Installer used to automate the deployement process of ONLYOFFICE Free Edition using the Docker container technology.  ONLYOFFICE Free Edition is an open source software that comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams.</value>
-  </data>
   <data name="SetupFormDescText" xml:space="preserve">
     <value>Read the information below to choose the ONLYOFFICE components that suit your needs best.</value>
-  </data>
-  <data name="UpdadeSetupOptionsDesc" xml:space="preserve">
-    <value>You need to manually remove previously installed ONLYOFFICE components before you can continue installation.</value>
-  </data>
-  <data name="SetupMailServerDesc" xml:space="preserve">
-    <value>We recommended that you install Mail Server together with other components. In case you decide to install it later you will need to remove all previously installed ONLYOFFICE components for successful installation.</value>
   </data>
   <data name="OperatingSystemCoreOS" xml:space="preserve">
     <value>CoreOS 647.0.0 (stable)</value>
   </data>
   <data name="OperatingSystemOther" xml:space="preserve">
-    <value>any other distributive with kernel version 3.19</value>
+    <value>any other distributive with kernel version 3.10 or later</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="LicensePlaceholder" xml:space="preserve">
+    <value>Upload License File</value>
+  </data>
+  <data name="InstallationProgressStep_InstallControlPanel" xml:space="preserve">
+    <value>Installing Control Panel</value>
+  </data>
+  <data name="ControlPanel" xml:space="preserve">
+    <value>Control Panel</value>
+  </data>
+  <data name="ConnectionSettingsFormDescText_Enterprise" xml:space="preserve">
+    <value>An ONLYOFFICE Installer used to automate the deployment process of ONLYOFFICE Enterprise Edition using the Docker container technology. ONLYOFFICE Enterprise Edition comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams. ONLYOFFICE Control Panel included into this installation will help you to configure the corporate web-office quickly and easily.</value>
+  </data>
+  <data name="ControlPanelHdr" xml:space="preserve">
+    <value>Control Panel</value>
+  </data>
+  <data name="ControlPanelText_Enterprise" xml:space="preserve">
+    <value>ONLYOFFICE Control Panel is a set of automation tools designed to simplify the web-office settings management, such as HTTPS, Updates, Rebranding, LDAP, Data Backup and Restore, Health Check, Login History and Audit Trail.</value>
+  </data>
+  <data name="UsingStepText" xml:space="preserve">
+    <value>Start using</value>
+  </data>
+  <data name="ServerSettingsFormDescText_1" xml:space="preserve">
+    <value>Your corporate web-office is ready.</value>
+  </data>
+  <data name="ServerSettingsFormDescText_2" xml:space="preserve">
+    <value>To start working right now, click the Open Your Web-Office button.</value>
+  </data>
+  <data name="LearnMore" xml:space="preserve">
+    <value>Learn more</value>
+  </data>
+  <data name="CompanyNamePlaceholder" xml:space="preserve">
+    <value>Company name</value>
+  </data>
+  <data name="CompanySizePlaceholder" xml:space="preserve">
+    <value>Company size</value>
+  </data>
+  <data name="EmailPlaceholder" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmployeesCount" xml:space="preserve">
+    <value>{0} employees</value>
+  </data>
+  <data name="EmployeesMoreThanCount" xml:space="preserve">
+    <value>More than {0} employees</value>
+  </data>
+  <data name="GetLicenseFile" xml:space="preserve">
+    <value>Get trial License File</value>
+  </data>
+  <data name="LicenseFile" xml:space="preserve">
+    <value>License File</value>
+  </data>
+  <data name="NamePlaceholder" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="PhonePlaceholder" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="PositionPlaceholder" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="RequestForm" xml:space="preserve">
+    <value>Request form</value>
+  </data>
+  <data name="TrialDescText" xml:space="preserve">
+    <value>After the correct filling in of the request we automatically generate the license file for the trial version, which will be available to you within 30 days.</value>
+  </data>
+  <data name="TrialReadyText" xml:space="preserve">
+    <value>Your license file has been successfully created and will be automatically inserted in the field.</value>
+  </data>
+  <data name="ConnectionSettingsFormDescText_Community" xml:space="preserve">
+    <value>An ONLYOFFICE Installer used to automate the deployment process of ONLYOFFICE Community Edition using the Docker container technology. ONLYOFFICE Community Edition comprises online document editors, collaboration system and mail server, all to resolve the collaboration issues for both small and medium-sized teams.</value>
   </data>
 </root>

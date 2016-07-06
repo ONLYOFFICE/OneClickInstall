@@ -39,14 +39,7 @@
 
     &.disabled {
         cursor: default;
-    }
-
-    &.small {
-        height: 26px;
-        line-height: 26px;
-        font-size: 12px;
-        font-weight: normal;
-        text-transform: none;
+        pointer-events: none;
     }
 
     &.green {
@@ -62,45 +55,8 @@
         }
 
         &.disabled {
-            background: #b7b7b7;
-        }
-    }
-
-    &.gray {
-        background: #f4f4f4;
-        border-color: #e0e0e0;
-        border-style: solid;
-        border-width: 1px;
-        color: #4c4c4c;
-        padding: 0 19px;
-        height: 46px;
-
-        &:hover {
-            border-color: #c5c5c5;
-        }
-
-        &:active {
-            background: #eaeaea;
-            border-color: #c5c5c5;
-        }
-
-        &.disabled {
-            background: #f4f4f4;
-            border-color: #e0e0e0;
-            color: #999999;
-        }
-    }
-
-    &.dark {
-        background: #888888;
-        color: #ffffff;
-
-        &:hover {
-            background: #909090;
-        }
-
-        &:active {
-            background: #808080;
+            background: #66bb6a;
+            color: #b5dbb7;
         }
     }
 
@@ -115,18 +71,10 @@
         &:active {
             background: #444444;
         }
-    }
 
-    &.blue {
-        background: #7a8ab1;
-        color: #ffffff;
-
-        &:hover {
-            background: #8494bb;
-        }
-
-        &:active {
-            background: #667bae;
+        &.disabled {
+            background: #4c4c4c;
+            color: #999999;
         }
     }
 }
