@@ -1,7 +1,7 @@
 ## ONLYOFFICE One Click Installation Overview
 
-An ONLYOFFICE One Click Installation is used to automate the deployment process of ONLYOFFICE Free Edition using the Docker container technology.
-ONLYOFFICE Free Edition is an open source software that comprises Document Server, Community Server and Mail Server,
+An ONLYOFFICE One Click Installation is used to automate the deployment process of ONLYOFFICE Community Edition using the Docker container technology.
+ONLYOFFICE Community Edition is an open source software that comprises Document Server, Community Server and Mail Server,
 all to resolve the collaboration issues for both small and medium-sized teams.
 
 
@@ -14,28 +14,29 @@ The scripts are performing the following:
 1. bash check-previous-version.sh  
 checking the already existing data 
 
-2. bash make-dir.sh "/app/onlyoffice"  
-creating the work directory (the folder all the necessary data will be copied to)
+2. bash make-dir.sh 
+creating the working directory /app/onlyoffice
 
 3. bash get-os-info.sh  
 getting the information about the currently used OS
 
-4. bash check-ports.sh true  
-checking ports of the current computer (the **true** parameter is used to check whether port 25 for Mail Server is opened or not)
+4. bash check-ports.sh "80,443,5222,25,143,587"  
+checking ports of the current computer
 
-5. bash run-docker.sh "Ubuntu" "14.04" "x86_64" "3.13.0-36-generic" true  
+5. bash run-docker.sh "Ubuntu" "14.04" "3.13.0-36-generic" "x86_64"  
 installing and running Docker
 
-During the installation process to the computer reboot might be required after which the scripts will continue to run. To indicate that the restart was done, the afterReboot (true) parameter is used.
+6. bash make-network.sh  
+creating docker network
 
-6. bash run-document-server.sh  
+7. bash run-document-server.sh  
 installing Document Server
 
-7. bash run-mail-server.sh "domainName"  
+8. bash run-mail-server.sh -d "domainName"  
 installing Mail Server using the specified domain name
 
 8. bash run-community-server.sh  
-installing Community Server and link it with Document Server and Mail Server, if selected
+installing Community Server
 
 
 Before running each script two commands need to be executed: 
