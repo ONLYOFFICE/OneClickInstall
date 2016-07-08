@@ -1,0 +1,11 @@
+logs
+
+packages
+
+
+build/Build.log
+
+
+web/App_Data/
+web/bin/
+web/obj/
