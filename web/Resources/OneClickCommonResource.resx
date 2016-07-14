@@ -153,9 +153,6 @@
   <data name="ErrorFilesNotTransfered" xml:space="preserve">
     <value>The files are not transferred</value>
   </data>
-  <data name="ErrorLicenseFileExist" xml:space="preserve">
-    <value>License file is already exist</value>
-  </data>
   <data name="ErrorLicenseFileNotValid" xml:space="preserve">
     <value>License file is not valid</value>
   </data>

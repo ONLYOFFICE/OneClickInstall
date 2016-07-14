@@ -202,7 +202,7 @@ namespace OneClickInstallation.Classes
                     FileMap.RunMailServerScript
                 };
 
-            if (Enterprise && !string.IsNullOrEmpty(LicenseKey))
+            if (Enterprise && Settings.EnterpriseLicenseRequired && !string.IsNullOrEmpty(LicenseKey))
             {
                 files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "DocumentServer"));
                 files.Add(FileMap.MakeLicenseFileMap(LicenseKey, "MailServer"));
@@ -320,21 +320,17 @@ namespace OneClickInstallation.Classes
         {
             if (string.IsNullOrEmpty(InstallationComponents.CommunityServerVersion)) return;
 
-            var notExist = string.IsNullOrEmpty(InstalledComponents.CommunityServerVersion);
-
             RunScript(InstallationProgressStep.InstallCommunityServer,
                           FileMap.RunCommunityServerScript,
                           "-i " + (Enterprise ? Settings.DockerEnterpriseCommunityImageName : Settings.DockerCommunityImageName),
-                          "-v " + (notExist ? InstallationComponents.CommunityServerVersion : InstalledComponents.CommunityServerVersion),
+                          "-v " + InstallationComponents.CommunityServerVersion,
                           "-c " + Settings.DockerCommunityContainerName,
                           "-dc " + Settings.DockerDocumentContainerName,
                           "-mc " + Settings.DockerMailContainerName,
                           "-cc " + Settings.DockerControlPanelContainerName,
                           "-p " + Settings.DockerHubPassword,
                           "-un " + Settings.DockerHubUserName,
-                          notExist ? string.Empty : "-u");
-
-            if (!notExist) return;
+                          string.IsNullOrEmpty(InstalledComponents.CommunityServerVersion) ? string.Empty : "-u");
 
             InstalledComponents.CommunityServerVersion = InstallationComponents.CommunityServerVersion;
             CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
@@ -344,18 +340,14 @@ namespace OneClickInstallation.Classes
         {
             if (string.IsNullOrEmpty(InstallationComponents.DocumentServerVersion)) return;
 
-            var notExist = string.IsNullOrEmpty(InstalledComponents.DocumentServerVersion);
-
             RunScript(InstallationProgressStep.InstallDocumentServer,
                           FileMap.RunDocumentServerScript,
                           "-i " + (Enterprise ? Settings.DockerEnterpriseDocumentImageName : Settings.DockerDocumentImageName),
-                          "-v " + (notExist ? InstallationComponents.DocumentServerVersion : InstalledComponents.DocumentServerVersion),
+                          "-v " + InstallationComponents.DocumentServerVersion,
                           "-c " + Settings.DockerDocumentContainerName,
                           "-p " + Settings.DockerHubPassword,
                           "-un " + Settings.DockerHubUserName,
-                          notExist ? string.Empty : "-u");
-
-            if (!notExist) return;
+                          string.IsNullOrEmpty(InstalledComponents.DocumentServerVersion) ? string.Empty : "-u");
 
             InstalledComponents.DocumentServerVersion = InstallationComponents.DocumentServerVersion;
             CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
@@ -365,19 +357,15 @@ namespace OneClickInstallation.Classes
         {
             if (string.IsNullOrEmpty(InstallationComponents.MailServerVersion)) return;
 
-            var notExist = string.IsNullOrEmpty(InstalledComponents.MailServerVersion);
-
             RunScript(InstallationProgressStep.InstallMailServer,
                           FileMap.RunMailServerScript,
                           "-i " + (Enterprise ? Settings.DockerEnterpriseMailImageName : Settings.DockerMailImageName),
-                          "-v " + (notExist ? InstallationComponents.MailServerVersion : InstalledComponents.MailServerVersion),
+                          "-v " + InstallationComponents.MailServerVersion,
                           "-c " + Settings.DockerMailContainerName,
                           string.IsNullOrEmpty(InstallationComponents.MailDomain) ? string.Empty : "-d " + InstallationComponents.MailDomain,
                           "-p " + Settings.DockerHubPassword,
                           "-un " + Settings.DockerHubUserName,
-                          notExist ? string.Empty : "-u");
-
-            if (!notExist) return;
+                          string.IsNullOrEmpty(InstalledComponents.MailServerVersion) ? string.Empty : "-u");
 
             InstalledComponents.MailServerVersion = InstallationComponents.MailServerVersion;
             CacheHelper.SetInstalledComponents(UserId, InstalledComponents);
@@ -387,18 +375,14 @@ namespace OneClickInstallation.Classes
         {
             if (string.IsNullOrEmpty(InstallationComponents.ControlPanelVersion)) return;
 
-            var notExist = string.IsNullOrEmpty(InstalledComponents.ControlPanelVersion);
-
             RunScript(InstallationProgressStep.InstallControlPanel,
                           FileMap.RunControlPanelScript,
                           "-i " + (Enterprise ? Settings.DockerEnterpriseControlPanelImageName : Settings.DockerControlPanelImageName),
-                          "-v " + (notExist ? InstallationComponents.ControlPanelVersion : InstalledComponents.ControlPanelVersion),
+                          "-v " + InstallationComponents.ControlPanelVersion,
                           "-c " + Settings.DockerControlPanelContainerName,
                           "-p " + Settings.DockerHubPassword,
                           "-un " + Settings.DockerHubUserName,
-                          notExist ? string.Empty : "-u");
-
-            if (!notExist) return;
+                          string.IsNullOrEmpty(InstalledComponents.ControlPanelVersion) ? string.Empty : "-u");
 
             InstalledComponents.ControlPanelVersion = InstallationComponents.ControlPanelVersion;
             CacheHelper.SetInstalledComponents(UserId, InstalledComponents);

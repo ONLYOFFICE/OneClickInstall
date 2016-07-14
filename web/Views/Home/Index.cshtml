@@ -74,7 +74,7 @@
     </div>
 </div>
 
-@if (ViewBag.Enterprise)
+@if (ViewBag.Enterprise && !String.IsNullOrEmpty(Settings.LicenseUrl))
 {
     <div id="trialPop" class="popup">
         <div class="popup-caption">
@@ -138,6 +138,7 @@
             SetupInfo.osInfo = JSON.parse(@Html.Raw(Json.Encode(ViewBag.OsInfo)));
             SetupInfo.trialFileName = '@Settings.TrialFileName';
             SetupInfo.enterprise = Boolean(@(ViewBag.Enterprise ? 1 : 0));
+            SetupInfo.enterpriseLicenseRequired = Boolean(@(ViewBag.EnterpriseLicenseRequired ? 1 : 0));
 
             InstallManager.init();
 

@@ -173,6 +173,10 @@ namespace OneClickInstallation.Helpers
             get { return GetAppSettings("cacheKey", string.Empty); }
         }
 
+        public static bool EnterpriseLicenseRequired
+        {
+            get { return GetAppSettings("enterprise.license.required", false); }
+        }
 
         public const string RemoteServerDir = "/app/onlyoffice";
 

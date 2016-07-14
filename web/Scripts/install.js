@@ -34,6 +34,7 @@ var SetupInfo = {
     requestInfo: null,
     trialFileName: null,
     enterprise: false,
+    enterpriseLicenseRequired: false,
 
     installationInTheProcess: function() {
         return this.selectedComponents && this.installationProgress && !this.installationProgress.isCompleted;
@@ -240,11 +241,11 @@ var InstallManager = (function () {
         Common.selectorListener.init();
 
         $("#sshFile").on("change", function () {
-            fileChange(this, $("#sshKey"));
+            fileChange(this, $("#sshKey"), false);
         });
 
         $("#licenseFile").on("change", function () {
-            fileChange(this, $("#licenseKey"), "license=true");
+            fileChange(this, $("#licenseKey"), true);
         });
 
         $(".switcher-container .switcher-btn").on("click", function () {
@@ -419,14 +420,19 @@ var InstallManager = (function () {
         }
     }
 
-    function fileChange(inputFile, inputText, urlParams) {
+    function fileChange(inputFile, inputText, isLicense) {
         var formdata = new window.FormData();
 
         $.each(inputFile.files, function () {
             formdata.append(inputFile.name, this);
         });
 
-        urlParams = urlParams ? "?" + urlParams : "";
+        var urlParams = "";
+
+        if (isLicense) {
+            SetupInfo.requestInfo = null;
+            urlParams = "?license=true";
+        }
 
         $.ajax({
             url: ActionUrl.UploadFile + urlParams,
@@ -509,7 +515,7 @@ var InstallManager = (function () {
             userName: $("#userName").val().trim(),
             password: usePassword ? $("#password").val().trim() : "",
             sshKey: usePassword ? "" : $("#sshKey").val().trim(),
-            licenseKey: SetupInfo.enterprise ? $("#licenseKey").val().trim() : "",
+            licenseKey: "",
             enterprise: SetupInfo.enterprise
         };
 
@@ -521,10 +527,11 @@ var InstallManager = (function () {
 
         if (!usePassword && !settings.sshKey) return null;
 
-        if (SetupInfo.enterprise) {
-            if (!settings.licenseKey) return null;
-
-            if (settings.licenseKey == SetupInfo.trialFileName && !SetupInfo.requestInfo) return null;
+        if (SetupInfo.enterprise && SetupInfo.enterpriseLicenseRequired) {
+            if (!SetupInfo.requestInfo) {
+                settings.licenseKey = $("#licenseKey").val().trim();
+                if (!settings.licenseKey) return null;
+            }
         }
 
         return settings;

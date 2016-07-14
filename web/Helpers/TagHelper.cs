@@ -34,78 +34,36 @@ namespace OneClickInstallation.Helpers
     {
         public static InstallationComponentsModel InitializeAvailableTags(bool enterprise)
         {
+            var token = GetAuthToken();
+
             var available = new InstallationComponentsModel
                 {
-                    CommunityServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseCommunityImageName : Settings.DockerCommunityImageName)),
-                    DocumentServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseDocumentImageName : Settings.DockerDocumentImageName)),
-                    MailServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseMailImageName : Settings.DockerMailImageName)),
-                    ControlPanelVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseControlPanelImageName : Settings.DockerControlPanelImageName)),
+                    CommunityServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseCommunityImageName : Settings.DockerCommunityImageName, token)),
+                    DocumentServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseDocumentImageName : Settings.DockerDocumentImageName, token)),
+                    MailServerVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseMailImageName : Settings.DockerMailImageName, token)),
+                    ControlPanelVersion = GetLatestTagName(GetImageTags(enterprise ? Settings.DockerEnterpriseControlPanelImageName : Settings.DockerControlPanelImageName, token)),
                 };
 
             CacheHelper.SetAvailableComponents(enterprise, available);
 
             return available;
         }
-        
-        public static List<ImageTag> GetImageTags(string imageName)
+
+        private static List<ImageTag> GetImageTags(string imageName, string token)
         {
             if (string.IsNullOrEmpty(imageName))
                 throw new ArgumentNullException("imageName");
 
             try
             {
-                var req = System.Net.WebRequest.Create(Settings.DockerHubLoginUrl);
-                
-                req.Method = "POST";
-                req.ContentType = "application/json";
-
-                var credentials = string.Empty;
-
-                if (!string.IsNullOrEmpty(Settings.DockerHubUserName) && !string.IsNullOrEmpty(Settings.DockerHubPassword))
-                    credentials = JsonConvert.SerializeObject(new
-                        {
-                            username = Settings.DockerHubUserName,
-                            password = Settings.DockerHubPassword
-                        });
-
-                var data = Encoding.ASCII.GetBytes(credentials);
-
-                req.ContentLength = data.Length;
-
-                using (var stream = req.GetRequestStream())
-                {
-                    stream.Write(data, 0, data.Length);
-                }
-
-                string output;
-
-                using (var resp = req.GetResponse())
-                {
-                    using (var stream = resp.GetResponseStream())
-                    {
-                        if (stream == null) return null;
-
-                        var sr = new StreamReader(stream);
-                        output = sr.ReadToEnd();
-                        sr.Close();
-                    }
-                }
-
-                var token = string.Empty;
-                dynamic obj;
-
-                if (!string.IsNullOrEmpty(output))
-                {
-                    obj = JsonConvert.DeserializeObject<dynamic>(output);
-                    token = obj.token;
-                }
-
-                req = System.Net.WebRequest.Create(string.Format(Settings.DockerHubTagsUrlFormat, imageName));
+                var req = System.Net.WebRequest.Create(string.Format(Settings.DockerHubTagsUrlFormat, imageName));
 
                 req.Method = "GET";
 
                 if(!string.IsNullOrEmpty(token))
                     req.Headers.Add("Authorization", "JWT " + token);
+
+                string output;
 
                 using (var resp = req.GetResponse())
                 {
@@ -122,7 +80,8 @@ namespace OneClickInstallation.Helpers
                 if (string.IsNullOrEmpty(output))
                     return null;
 
-                obj = JsonConvert.DeserializeObject<dynamic>(output);
+                var obj = JsonConvert.DeserializeObject<dynamic>(output);
+
                 return ((IEnumerable<dynamic>) obj.results).Select(x => new ImageTag {Name = x.name}).ToList();
             }
             catch (Exception ex)
@@ -130,6 +89,53 @@ namespace OneClickInstallation.Helpers
                 LogManager.GetLogger("ASC").Error(ex.Message, ex);
                 return null;
             }
+        }
+
+        private static string GetAuthToken()
+        {
+            if (string.IsNullOrEmpty(Settings.DockerHubUserName) || string.IsNullOrEmpty(Settings.DockerHubPassword))
+                return null;
+            
+            var req = System.Net.WebRequest.Create(Settings.DockerHubLoginUrl);
+
+            req.Method = "POST";
+            req.ContentType = "application/json";
+
+            var credentials = JsonConvert.SerializeObject(new
+                {
+                    username = Settings.DockerHubUserName,
+                    password = Settings.DockerHubPassword
+                });
+
+            var data = Encoding.ASCII.GetBytes(credentials);
+
+            req.ContentLength = data.Length;
+
+            using (var stream = req.GetRequestStream())
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            string output;
+
+            using (var resp = req.GetResponse())
+            {
+                using (var stream = resp.GetResponseStream())
+                {
+                    if (stream == null) return null;
+
+                    var sr = new StreamReader(stream);
+                    output = sr.ReadToEnd();
+                    sr.Close();
+                }
+            }
+
+            if (string.IsNullOrEmpty(output))
+                return null;
+
+            var obj = JsonConvert.DeserializeObject<dynamic>(output);
+
+            return obj.token; 
         }
 
         private static string GetLatestTagName(List<ImageTag> imageTags)
@@ -162,13 +168,6 @@ namespace OneClickInstallation.Helpers
             }
 
             return null;
-        }
-
-        private static string BuildBasicAuth(string username, string password)
-        {
-            var authInfo = string.Format("{0}:{1}", username, password);
-
-            return string.Format("Basic {0}", Convert.ToBase64String(Encoding.Default.GetBytes(authInfo)));
         }
     }
 }

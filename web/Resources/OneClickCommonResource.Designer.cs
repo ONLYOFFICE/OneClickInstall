@@ -169,15 +169,6 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to License file is already exist.
-        /// </summary>
-        public static string ErrorLicenseFileExist {
-            get {
-                return ResourceManager.GetString("ErrorLicenseFileExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to License file is not valid.
         /// </summary>
         public static string ErrorLicenseFileNotValid {

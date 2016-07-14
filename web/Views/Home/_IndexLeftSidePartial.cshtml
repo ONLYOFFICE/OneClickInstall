@@ -37,11 +37,11 @@
             <input id="password" type="password" class="single" placeholder="@OneClickHomePageResource.PasswordPlaceholder" />
         </div>
 
-        @if (ViewBag.Enterprise)
+        @if (ViewBag.Enterprise && Settings.EnterpriseLicenseRequired)
         {
             <div class="bottom-indent-small semibold">@OneClickHomePageResource.LicenseFile</div>
 
-            <div class="bottom-indent-small position-relative">
+            <div class="bottom-indent position-relative">
                 <input id="licenseKey" type="text" class="single" readonly="readonly" placeholder="@OneClickHomePageResource.LicensePlaceholder" style="padding-right: 64px;"/>
                 <div class="upload-container">
                     <input type="file" name="file" id="licenseFile">
@@ -49,9 +49,12 @@
                 </div>
             </div>
 
-            <div class="bottom-indent">
-                <a id="showTrialPop" class="blue underline label">@OneClickHomePageResource.GetLicenseFile</a>
-            </div>
+            if (!String.IsNullOrEmpty(Settings.LicenseUrl))
+            {
+                <div class="bottom-indent">
+                    <a id="showTrialPop" class="blue underline label">@OneClickHomePageResource.GetLicenseFile</a>
+                </div>
+            }
         }
 
         <div class="bottom-indent">

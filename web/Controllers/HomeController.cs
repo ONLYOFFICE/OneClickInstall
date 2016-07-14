@@ -83,6 +83,7 @@ namespace OneClickInstallation.Controllers
             ViewBag.InstallationProgress = GetJsonString(installationProgress);
             ViewBag.OsInfo = GetJsonString(osInfo);
             ViewBag.Enterprise = enterprise;
+            ViewBag.EnterpriseLicenseRequired = Settings.EnterpriseLicenseRequired;
 
             if (!string.IsNullOrEmpty(Settings.CacheKey) && Request.Params["cache"] == Settings.CacheKey)
             {
@@ -141,13 +142,10 @@ namespace OneClickInstallation.Controllers
 
                 if (connectionSettings != null)
                 {
-                    if (connectionSettings.Enterprise)
+                    if (connectionSettings.Enterprise && Settings.EnterpriseLicenseRequired)
                     {
-                        if (string.IsNullOrEmpty(connectionSettings.LicenseKey))
-                            throw new ArgumentException("connectionSettings.licenseKey");
-
-                        if (connectionSettings.LicenseKey == Settings.TrialFileName && requestInfo == null)
-                            throw new ArgumentNullException("requestInfo");
+                        if (requestInfo == null && string.IsNullOrEmpty(connectionSettings.LicenseKey))
+                            throw new Exception(OneClickCommonResource.ErrorRequestInfoIsNull);
                     }
 
                     var data = SshHelper.Connect(UserId, connectionSettings);
@@ -198,13 +196,15 @@ namespace OneClickInstallation.Controllers
             {
                 var connectionSettings = CacheHelper.GetConnectionSettings(UserId);
                 var installedComponents = CacheHelper.GetInstalledComponents(UserId);
+                var requestInfo = CacheHelper.GetRequestInfo(UserId);
 
-                if (connectionSettings.Enterprise && connectionSettings.LicenseKey == Settings.TrialFileName && !string.IsNullOrEmpty(Settings.LicenseUrl))
+                if (connectionSettings.Enterprise &&
+                    Settings.EnterpriseLicenseRequired &&
+                    string.IsNullOrEmpty(connectionSettings.LicenseKey) &&
+                    requestInfo != null &&
+                    !string.IsNullOrEmpty(Settings.LicenseUrl))
                 {
-                    if (installedComponents != null && installedComponents.LicenseFileExist)
-                        throw new Exception(OneClickCommonResource.ErrorLicenseFileExist);
-
-                    connectionSettings = RequestLicenseFile(connectionSettings, CacheHelper.GetRequestInfo(UserId));
+                    connectionSettings = RequestLicenseFile(connectionSettings, requestInfo);
                 }
 
                 var mailServerAlreadyInstalled = installedComponents != null &&
@@ -379,9 +379,6 @@ namespace OneClickInstallation.Controllers
 
         private ConnectionSettingsModel RequestLicenseFile(ConnectionSettingsModel connectionSettings, RequestInfoModel requestInfo)
         {
-            if(requestInfo == null)
-                throw new Exception(OneClickCommonResource.ErrorRequestInfoIsNull);
-
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection();
