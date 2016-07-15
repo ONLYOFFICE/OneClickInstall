@@ -117,8 +117,8 @@ install_docker () {
 
 		sudo apt-get -y update
 		sudo apt-get -y upgrade
-		sudo apt-get -y -q install curl
-		sudo curl -sSL https://get.docker.com/ | sh
+		sudo apt-get -y install docker-engine
+		sudo service docker start
 
 	elif [[ "${DIST}" == CentOS* ]] || [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
 
