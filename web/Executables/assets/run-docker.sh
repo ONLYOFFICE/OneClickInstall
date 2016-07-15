@@ -116,14 +116,12 @@ install_docker () {
 	if [ "${DIST}" == "Ubuntu" ] || [ "${DIST}" == "Debian" ]; then
 
 		sudo apt-get -y update
-		sudo apt-get -y upgrade
-		sudo apt-get -y install docker-engine
-		sudo service docker start
+		sudo apt-get -y -q install curl
+		sudo curl -sSL https://get.docker.com/ | sh
 
 	elif [[ "${DIST}" == CentOS* ]] || [ "${DIST}" == "Red Hat Enterprise Linux Server" ]; then
 
 		sudo yum -y update
-		sudo yum -y upgrade
 		sudo yum -y install curl
 		sudo curl -fsSL https://get.docker.com/ | sh
 		sudo service docker start
@@ -138,7 +136,6 @@ install_docker () {
 
 		sudo dnf -y update
 		sudo yum -y update
-		sudo yum -y upgrade
 		sudo yum -y install curl
 		sudo curl -fsSL https://get.docker.com/ | sh
 		sudo systemctl start docker
