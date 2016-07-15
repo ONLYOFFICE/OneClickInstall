@@ -277,10 +277,7 @@
     <Content Include="Executables\tools\login-docker.sh" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Executables\install.sh" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Executables\restart.sh" />
+    <Content Include="Executables\tools\make-swap.sh" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

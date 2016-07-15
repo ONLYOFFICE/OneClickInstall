@@ -141,6 +141,9 @@
   <data name="ErrorInstallation8" xml:space="preserve">
     <value>To perform this action you must be logged in with root rights</value>
   </data>
+  <data name="ErrorInstallation9" xml:space="preserve">
+    <value>The system does not meet the minimal hardware requirements</value>
+  </data>
   <data name="ErrorInstallationExternal1" xml:space="preserve">
     <value>Cannot create trial license. Invalid input parameter.</value>
   </data>

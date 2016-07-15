@@ -178,6 +178,27 @@ namespace OneClickInstallation.Helpers
             get { return GetAppSettings("enterprise.license.required", false); }
         }
 
+        public static int RequirementsDisk
+        {
+            get { return GetAppSettings("requirements.disk", 0); }
+        }
+
+        public static int RequirementsMemory
+        {
+            get { return GetAppSettings("requirements.memory", 0); }
+        }
+
+        public static int RequirementsCore
+        {
+            get { return GetAppSettings("requirements.core", 0); }
+        }
+
+        public static bool MakeSwap
+        {
+            get { return GetAppSettings("makeSwap", true); }
+        }
+
+
         public const string RemoteServerDir = "/app/onlyoffice";
 
         public const string TrialFileName = "trial.lic";

@@ -25,5 +25,8 @@ namespace OneClickInstallation.Classes
         public string Ver { get; set; }
         public string Type { get; set; }
         public string Kernel { get; set; }
+        public int Disk { get; set; }
+        public int Memory { get; set; }
+        public int Core { get; set; }
     }
 }

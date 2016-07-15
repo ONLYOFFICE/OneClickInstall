@@ -133,6 +133,15 @@ namespace OneClickInstallation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The system does not meet the minimal hardware requirements.
+        /// </summary>
+        public static string ErrorInstallation9 {
+            get {
+                return ResourceManager.GetString("ErrorInstallation9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create trial license. Invalid input parameter..
         /// </summary>
         public static string ErrorInstallationExternal1 {

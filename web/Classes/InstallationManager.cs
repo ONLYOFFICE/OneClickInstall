@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -107,6 +108,9 @@ namespace OneClickInstallation.Classes
 
                 var osInfo = GetOsInfo(FileMap.GetOsInfoScript, InstallationProgressStep.GetOsInfo);
 
+                if (Settings.MakeSwap)
+                    MakeSwap();
+
                 CheckPorts();
 
                 InstallDocker(osInfo);
@@ -193,6 +197,7 @@ namespace OneClickInstallation.Classes
                     FileMap.LoginDockerScript,
                     FileMap.MakeDirScript,
                     FileMap.MakeNetworkScript,
+                    FileMap.MakeSwapScript,
                     FileMap.PullImageScript,
                     FileMap.RemoveContainerScript,
 
@@ -244,19 +249,32 @@ namespace OneClickInstallation.Classes
 
         private OsInfo GetOsInfo(FileMap script, InstallationProgressStep? progressStep)
         {
-            var output = RunScript(progressStep, script);
+            var output = RunScript(progressStep,
+                script,
+                true,
+                Settings.RequirementsDisk.ToString(CultureInfo.InvariantCulture),
+                Settings.RequirementsMemory.ToString(CultureInfo.InvariantCulture),
+                Settings.RequirementsCore.ToString(CultureInfo.InvariantCulture));
 
             var osInfo = new OsInfo
                 {
                     Dist = GetTerminalParam(output, "DIST"),
                     Ver = GetTerminalParam(output, "REV"),
                     Type = GetTerminalParam(output, "MACH"),
-                    Kernel = GetTerminalParam(output, "KERNEL")
+                    Kernel = GetTerminalParam(output, "KERNEL"),
+                    Disk = int.Parse(GetTerminalParam(output, "DISK")),
+                    Memory = int.Parse(GetTerminalParam(output, "MEMORY")),
+                    Core = int.Parse(GetTerminalParam(output, "CORE"))
                 };
 
             CacheHelper.SetOsInfo(UserId, osInfo);
 
             return osInfo;
+        }
+
+        private void MakeSwap()
+        {
+            RunScript(null, FileMap.MakeSwapScript, true);
         }
 
         private void CheckPorts()
@@ -496,6 +514,7 @@ namespace OneClickInstallation.Classes
             public static readonly FileMap LoginDockerScript = MakeSetupFileMap("login-docker.sh", "tools");
             public static readonly FileMap MakeDirScript = MakeSetupFileMap("make-dir.sh", "tools");
             public static readonly FileMap MakeNetworkScript = MakeSetupFileMap("make-network.sh", "tools");
+            public static readonly FileMap MakeSwapScript = MakeSetupFileMap("make-swap.sh", "tools");
             public static readonly FileMap PullImageScript = MakeSetupFileMap("pull-image.sh", "tools");
             public static readonly FileMap RemoveContainerScript = MakeSetupFileMap("remove-container.sh", "tools");
 
