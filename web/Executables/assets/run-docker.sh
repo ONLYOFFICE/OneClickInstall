@@ -125,6 +125,7 @@ install_docker () {
 		sudo yum -y install curl
 		sudo curl -fsSL https://get.docker.com/ | sh
 		sudo service docker start
+		sudo chkconfig docker on
 
 	elif [ "${DIST}" == "SuSe" ]; then
 
