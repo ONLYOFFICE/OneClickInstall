@@ -51,9 +51,10 @@ namespace OneClickInstallation.Classes
                 if (_sshClient == null)
                     _sshClient = new SshClient(ConnectionInfo);
 
+                if (_sshClient.IsConnected) return _sshClient;
+
                 _sshClient.Connect();
                 _sshClient.KeepAliveInterval = TimeSpan.FromMinutes(30);
-                _sshClient.SendKeepAlive();
 
                 return _sshClient;
             }
@@ -70,7 +71,6 @@ namespace OneClickInstallation.Classes
                 
                 _sftpClient.Connect();
                 _sftpClient.KeepAliveInterval = TimeSpan.FromMinutes(30);
-                _sftpClient.SendKeepAlive();
 
                 UpdateAuth();
 
