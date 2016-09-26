@@ -323,7 +323,7 @@ namespace OneClickInstallation.Classes
             RunScript(InstallationProgressStep.InstallDocker,
                       FileMap.RunDockerScript,
                       true,
-                      osInfo.Dist,
+                      "\"" + osInfo.Dist + "\"",
                       osInfo.Ver,
                       osInfo.Kernel,
                       osInfo.Type);
