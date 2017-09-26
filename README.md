@@ -7,7 +7,7 @@ all to resolve the collaboration issues for both small and medium-sized teams.
 
 ## How it works?
 
-ONLYOFFICE One Click Installation service connects to a remote Linux machine via SSH (https://www.nuget.org/packages/SSH.NET/ or http://sshnet.codeplex.com/) using the following provided user data: username with admin access rights, password or SSH key and the server IP address or full domain name, uploads the scripts from the 'Executables' folder and runs them:
+ONLYOFFICE One Click Installation service connects to a remote Linux machine via SSH (https://www.nuget.org/packages/SSH.NET/ or https://github.com/sshnet/SSH.NET) using the following provided user data: username with admin access rights, password or SSH key and the server IP address or full domain name, uploads the scripts from the 'Executables' folder and runs them:
 
 The scripts are performing the following:
 
