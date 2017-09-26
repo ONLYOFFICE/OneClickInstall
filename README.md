@@ -64,6 +64,7 @@ ONLYOFFICE Open Source version: [http://www.onlyoffice.org](http://onlyoffice.or
 
 ## User Feedback and Support
 
-If you have any problems with or questions about ONLYOFFICE One Click Installation, please visit our official forum to find answers to your questions: [dev.onlyoffice.org][1].
+If you have any problems with or questions about ONLYOFFICE One Click Installation, please visit our official forum to find answers to your questions: [dev.onlyoffice.org][1] or you can ask and answer ONLYOFFICE development questions on [Stack Overflow][2].
 
   [1]: http://dev.onlyoffice.org
+  [2]: http://stackoverflow.com/questions/tagged/onlyoffice
